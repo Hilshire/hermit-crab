@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, CreateDa
 import Comment from './Comment';
 
 @Entity()
-export default class Bolg {
+export default class Essay {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -12,7 +12,7 @@ export default class Bolg {
     @Column('blob')
     context: string;
 
-    @OneToMany(type => Comment, comment => comment.blog)
+    @OneToMany('Comment', 'blog')
     @JoinTable()
     comments: Comment[];
 

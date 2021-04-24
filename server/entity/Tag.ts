@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import Blog from './Blog'
 
 @Entity()
 export default class Tag {
@@ -8,7 +7,4 @@ export default class Tag {
 
     @Column('varchar', {length: 20})
     name: string;
-
-    @ManyToMany(type => Blog, blog => blog.tags)
-    blogs: Blog[];
 }

@@ -3,7 +3,7 @@ import Tag from './Tag';
 import Comment from './Comment';
 
 @Entity()
-export default class Bolg {
+export default class Blog {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -13,12 +13,11 @@ export default class Bolg {
     @Column('blob')
     context: string;
 
-    @ManyToMany(type => Tag, tag => tag.blogs)
+    @ManyToMany('Tag')
     @JoinTable()
     tags: Tag[];
     
-    @OneToMany(type => Comment, comment => comment.blog)
-    @JoinTable()
+    @OneToMany('Comment', 'blog')
     comments: Comment[];
 
     @CreateDateColumn()

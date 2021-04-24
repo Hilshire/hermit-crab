@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinTable, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne} from 'typeorm';
 import Blog from './Blog';
 import Essay from './Essay'
 
@@ -10,15 +10,9 @@ export default class Comment {
     @Column('blob')
     context: string;
 
-    @ManyToOne(() => Blog, blog => blog.comments)
+    @ManyToOne('Blog', 'comments')
     blog: Blog;
 
-    @ManyToMany(() => Essay, essay => essay.comments)
+    @ManyToOne('Essay', 'comments')
     essay: Essay;
-
-    @CreateDateColumn()
-    createdAt: string;
-
-    @UpdateDateColumn()
-    lastUpdateAt: string;
 }

@@ -2,9 +2,10 @@ import { FunctionComponent, useState, useEffect } from 'react';
 import { getConnection, Repository } from 'typeorm';
 import { Blog as BlogEntity } from "../../server/entity";
 import { getEnv } from "../../util";
-import { FormControl, TextField, Button, TableContainer, Table, TableCell, TableRow, TableBody, TableHead  } from '@material-ui/core';
+import { FormControl, TextField, Button } from '@material-ui/core';
 import axios from 'axios';
 import { useSnackbar } from '../../hooks/snackbar';
+import { DataTable } from '../../components'
 
 interface Props {
     blogJson: string;
@@ -26,20 +27,11 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
             </FormControl>
         </form>
         <Button color="primary" onClick={submit}>submit</Button>
-        <TableContainer>
-            <Table>
-                <TableHead>
-                    <TableCell>id</TableCell>
-                    <TableCell>title</TableCell>
-                </TableHead>
-                <TableBody>
-                    {blogs.map(blog => <TableRow>
-                        <TableCell>{blog.id}</TableCell>
-                        <TableCell>{blog.title}</TableCell>
-                    </TableRow>)}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <DataTable
+            data={blogs}
+            columns={['id', 'title']}
+            heads={['id', 'title']}
+        ></DataTable>
         <Snackbar></Snackbar>
     </div>
 

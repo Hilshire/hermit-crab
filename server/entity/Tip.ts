@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, CreateDa
 import Tag from './Tag';
 
 @Entity()
-export default class Bolg {
+export default class Tip {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -12,7 +12,7 @@ export default class Bolg {
     @Column('blob')
     context: string;
 
-    @ManyToMany(type => Tag, tag => tag.blogs)
+    @ManyToMany('Tag')
     @JoinTable()
     tags: Tag[]
 

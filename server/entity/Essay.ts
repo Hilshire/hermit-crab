@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import Tag from './Tag';
 import Comment from './Comment';
 
 @Entity()
@@ -13,10 +12,6 @@ export default class Bolg {
     @Column('blob')
     context: string;
 
-    @ManyToMany(type => Tag, tag => tag.blogs)
-    @JoinTable()
-    tags: Tag[];
-    
     @OneToMany(type => Comment, comment => comment.blog)
     @JoinTable()
     comments: Comment[];

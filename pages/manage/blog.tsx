@@ -2,9 +2,9 @@ import { FunctionComponent, useState, useEffect } from 'react';
 import { getConnection, Repository } from 'typeorm';
 import { Blog as BlogEntity } from "../../server/entity";
 import { getEnv } from "../../util";
-import { FormControl, TextField, Button } from '@material-ui/core';
+import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
 import axios from 'axios';
-import { useSnackbar } from '../../hooks/snackbar';
+import { useSnackbar, useAlert } from '../../hooks';
 import { DataTable } from '../../components'
 
 interface Props {
@@ -13,7 +13,8 @@ interface Props {
 const Blog: FunctionComponent<Props> = ({ blogJson }) => {
     const [ title, setTitle ] = useState('')
     const [ context, setContext ] = useState('')
-    const { setVisible, setSnackbar, Snackbar } = useSnackbar()
+    const { setSnackbar, Snackbar } = useSnackbar()
+    const { setVisible: setAlertVisible, Alert } = useAlert(() => console.log('ok'))
 
     const blogs: BlogEntity[] = JSON.parse(blogJson);
 
@@ -31,8 +32,16 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
             data={blogs}
             columns={['id', 'title']}
             heads={['id', 'title']}
-        ></DataTable>
+            operator={(row) => <TableCell>
+                    <Button onClick={() => detail(row)}>查看</Button>
+                    <Button onClick={() => deleteBlog(row)}>删除</Button>
+                </TableCell>}
+        >
+        </DataTable>
         <Snackbar></Snackbar>
+        <Alert>
+            <div>test</div>
+        </Alert>
     </div>
 
     function submit() {
@@ -45,6 +54,13 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
             }, res => {
                 setSnackbar(true, 'ops!', 'error')
             })
+    }
+
+    function detail(row) {
+
+    }
+    function deleteBlog(row) {
+
     }
 }
 

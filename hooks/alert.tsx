@@ -9,6 +9,8 @@ export function useAlert(onOk, onClose = ()=>{}) {
     return {
         visible,
         setVisible,
+        setHandleClose,
+        setHandleOk,
         Alert: (props) => <Dialog open={visible} onClose={handleClose}>
             <DialogContent>
                 {props.children}

@@ -1,6 +1,7 @@
 import App, { AppContext } from "next/app";
 import type { AppProps /*, AppContext */ } from 'next/app'
 import { prepareConnection } from'../server/connection'
+import '../styles/globals.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />

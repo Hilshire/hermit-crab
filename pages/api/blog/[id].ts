@@ -5,10 +5,10 @@ import { getRepo } from '../utils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const repo = await getRepo(Blog)
-  switch(req.method) {
+  const { id } = req.query
+  if (!id) res.status(500).json({ code: 0, message: 'need id' })
+  switch (req.method) {
     case 'DELETE':
-      const { id } = req.query
-      if (!id) res.status(500).json({ code: 0, message: 'need id' })
       try {
         await repo.delete(id)
         res.status(200).json({ code: 1 })
@@ -16,6 +16,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(500).json({ code: 0, message: e })
       }
       break
+    case 'PUT':
+      const { title, context } = req.body
+      await repo.update(id, { title, context })
+      res.status(200).json({ code: 1 })
     default:
       res.status(405).json({ code: 0 })
   }

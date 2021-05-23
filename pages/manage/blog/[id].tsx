@@ -4,6 +4,8 @@ import Markdown from 'markdown-to-jsx';
 import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
 import { Blog as BlogEntity } from "../../../server/entity";
 import { getEnv } from "../../../util";
+import axios from "axios";
+import { useSnackbar } from "../../../hooks";
 
 interface Props {
   blogJson: string;
@@ -15,10 +17,11 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
   const [type, setType] = useState<DetailType>('preview')
   const [title, setTitle] = useState(data.title)
   const [context, setContext] = useState(data.context)
+  const { setSnackbar, Snackbar } = useSnackbar()
 
   return <div className="blog-detail">
     <Button color="primary" onClick={() => setType(type === 'edit' ? 'preview' : 'edit')}>{type === 'edit' ? 'PREVIEW' : 'EDIT' }</Button>
-    { type === 'edit' && <Button color="primary" onClick={() => {}}>SUBMIT</Button> }
+    { type === 'edit' && <Button color="primary" onClick={handleSubmit}>SUBMIT</Button> }
     <div className="edit-area">
       <div className="edit-section">
         <form>
@@ -43,7 +46,19 @@ ${type === 'preview' ? data.context : context}
         </Markdown>
       </div>
     </div>
+    <Snackbar></Snackbar>
   </div>
+
+  function handleSubmit() {
+    axios.put('/api/blog/' + data.id, { title, context })
+      .then(res => {
+          if (res.data.code) {
+              setSnackbar(true, 'ok', 'success', location.reload.bind(location));
+          } else setSnackbar(true, res.data.message || 'ops!', 'error')
+      }, e => {
+          setSnackbar(true, e.message || 'ops!', 'error')
+      })
+  }
 }
 
 export async function getServerSideProps({params}) {

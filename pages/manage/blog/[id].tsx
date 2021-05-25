@@ -2,10 +2,10 @@ import { FunctionComponent, useState } from "react";
 import { getConnection } from "typeorm";
 import Markdown from 'markdown-to-jsx';
 import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
-import { Blog as BlogEntity } from "../../../server/entity";
-import { getEnv } from "../../../util";
+import { Blog as BlogEntity } from "@server/entity";
+import { getEnv } from "@util";
 import axios from "axios";
-import { useSnackbar } from "../../../hooks";
+import { useSnackbar } from "@hooks";
 
 interface Props {
   blogJson: string;

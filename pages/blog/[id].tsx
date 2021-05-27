@@ -3,6 +3,7 @@ import { getConnection } from "typeorm";
 import { useRouter } from 'next/router'
 import { Blog as BlogEntity } from "../../server/entity";
 import { getEnv } from "../../util";
+import { prepareConnection } from 'server/connection'
 
 export function Blog({ blogJson }) {
   const router = useRouter()
@@ -35,6 +36,7 @@ export async function getStaticProps({ params }) {
   if (!id) {
     return { notFound: true }
   }
+  await prepareConnection();
   const connection = getConnection(getEnv());
   const blog = await connection.getRepository<BlogEntity>(BlogEntity).findOne(params.id);
   if (!blog) {

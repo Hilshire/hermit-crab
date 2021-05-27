@@ -6,6 +6,7 @@ import { FormControl, TextField, Button, TableRow, TableCell } from '@material-u
 import axios from 'axios';
 import { useSnackbar, useAlert } from '../../../hooks';
 import { DataTable } from '../../../components'
+import { prepareConnection } from 'server/connection'
 import Link from 'next/link'
 
 interface Props {
@@ -81,6 +82,7 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
 }
 
 export async function getServerSideProps() {
+    await prepareConnection();
     const connection = getConnection(getEnv());
     const blogs = await connection.getRepository<BlogEntity>(BlogEntity).find();
 

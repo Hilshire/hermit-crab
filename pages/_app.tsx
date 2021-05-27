@@ -1,6 +1,5 @@
 import App, { AppContext } from "next/app";
 import type { AppProps /*, AppContext */ } from 'next/app'
-import { prepareConnection } from'../server/connection'
 import '../styles/globals.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -12,11 +11,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 // perform automatic static optimization, causing every page in your app to
 // be server-side rendered.
 //
-MyApp.getInitialProps = async (appContext: AppContext) => {
+// MyApp.getInitialProps = async (appContext: AppContext) => {
   // calls page's `getInitialProps` and fills `appProps.pageProps`
-  const appProps = await App.getInitialProps(appContext);
-  await prepareConnection();
-  return { ...appProps }
-}
+  // const appProps = await App.getInitialProps(appContext);
+  // return { ...appProps }
+// }
 
 export default MyApp

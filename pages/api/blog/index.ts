@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Blog } from '../../../server/entity'
-import { getRepo } from '../utils'
+import { getRepo } from '@utils'
 
 
 

@@ -1,8 +1,8 @@
 import Markdown from "markdown-to-jsx";
 import { getConnection } from "typeorm";
 import { useRouter } from 'next/router'
-import { Blog as BlogEntity } from "../../server/entity";
-import { prepareConnection } from 'server/connection'
+import { Blog as BlogEntity } from "@server/entity";
+import { getRepo } from '@utils'
 
 export function Blog({ blogJson }) {
   const router = useRouter()
@@ -35,9 +35,8 @@ export async function getStaticProps({ params }) {
   if (!id) {
     return { notFound: true }
   }
-  await prepareConnection();
-  const connection = getConnection(process.env.NODE_ENV);
-  const blog = await connection.getRepository<BlogEntity>(BlogEntity).findOne(params.id);
+  const repo = await getRepo<BlogEntity>(BlogEntity)
+  const blog = await repo.findOne(params.id);
   if (!blog) {
     return { notFound: true }
   }

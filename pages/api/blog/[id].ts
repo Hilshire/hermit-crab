@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Blog } from '../../../server/entity'
-import { getRepo } from '../utils'
+import { Blog } from '@server/entity'
+import { getRepo } from '@utils'
 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

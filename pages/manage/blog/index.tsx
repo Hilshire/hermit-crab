@@ -1,11 +1,10 @@
 import { FunctionComponent, useState, useEffect } from 'react';
-import { getConnection, Repository } from 'typeorm';
-import { Blog as BlogEntity } from "../../../server/entity";
+import { getRepo } from '@utils'
+import { Blog as BlogEntity } from "@server/entity";
 import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
 import axios from 'axios';
-import { useSnackbar, useAlert } from '../../../hooks';
-import { DataTable } from '../../../components'
-import { prepareConnection } from 'server/connection'
+import { useSnackbar, useAlert } from '@hooks';
+import { DataTable } from '@components'
 import Link from 'next/link'
 
 interface Props {
@@ -81,10 +80,8 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
 }
 
 export async function getServerSideProps() {
-    await prepareConnection();
-    const connection = getConnection(process.env.NODE_ENV);
-    const blogs = await connection.getRepository<BlogEntity>(BlogEntity).find();
-
+    const repo = await getRepo<BlogEntity>(BlogEntity);
+    const blogs = await repo.find();
     return {
         props: {
             blogsJson: JSON.stringify(blogs)

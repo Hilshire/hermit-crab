@@ -22,7 +22,7 @@
     "paths": {
       "@components": ["./components"],
       "@hooks": ["./hooks"],
-      "@util": ["./util"],
+      "@utils": ["./utils"],
       "@server/*": ["./server/*"]
     }
   },

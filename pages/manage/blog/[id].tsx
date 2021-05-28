@@ -1,11 +1,10 @@
 import { FunctionComponent, useState } from "react";
-import { getConnection } from "typeorm";
 import Markdown from 'markdown-to-jsx';
 import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
-import { prepareConnection } from 'server/connection'
 import { Blog as BlogEntity } from "@server/entity";
 import axios from "axios";
 import { useSnackbar } from "@hooks";
+import { getRepo } from '@utils'
 
 interface Props {
   blogJson: string;
@@ -62,9 +61,8 @@ ${type === 'preview' ? data.context : context}
 }
 
 export async function getServerSideProps({params}) {
-  await prepareConnection();
-  const connection = getConnection(process.env.NODE_ENV);
-  const blog = await connection.getRepository<BlogEntity>(BlogEntity).findOne(params.id);
+  const repo = await getRepo<BlogEntity>(BlogEntity)
+  const blog = await repo.findOne(params.id);
 
   return {
       props: {

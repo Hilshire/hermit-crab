@@ -1,7 +1,6 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { getConnection, Repository } from 'typeorm';
 import { Blog as BlogEntity } from "../../../server/entity";
-import { getEnv } from "../../../util";
 import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
 import axios from 'axios';
 import { useSnackbar, useAlert } from '../../../hooks';
@@ -83,7 +82,7 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
 
 export async function getServerSideProps() {
     await prepareConnection();
-    const connection = getConnection(getEnv());
+    const connection = getConnection(process.env.NODE_ENV);
     const blogs = await connection.getRepository<BlogEntity>(BlogEntity).find();
 
     return {

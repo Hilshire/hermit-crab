@@ -1,8 +1,14 @@
 [
     {
-        "name": "dev",
+        "name": "development",
         "type": "sqlite",
         "database": "db/db.dev",
+        "synchronize": true
+    },
+    {
+        "name": "product",
+        "type": "sqlite",
+        "database": "db/db.prod",
         "synchronize": true
     },
     {

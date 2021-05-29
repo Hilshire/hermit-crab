@@ -6,7 +6,7 @@
         "synchronize": true
     },
     {
-        "name": "product",
+        "name": "production",
         "type": "sqlite",
         "database": "db/db.prod",
         "synchronize": true

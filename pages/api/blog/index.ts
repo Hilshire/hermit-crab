@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Blog } from '../../../server/entity'
 import { getRepo } from '@utils'
+import { jwt } from '@middleware'
 
 
-
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const createBlog = async (req: NextApiRequest, res: NextApiResponse) => {
   const repo = await getRepo(Blog)
   switch(req.method) {
     case 'PUT':
@@ -23,3 +23,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(405).json({ code: 0 })
   }
 }
+
+export default jwt(createBlog)

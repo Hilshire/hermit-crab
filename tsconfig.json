@@ -23,7 +23,9 @@
       "@components": ["./components"],
       "@hooks": ["./hooks"],
       "@utils": ["./utils"],
-      "@server/*": ["./server/*"]
+      "@server/*": ["./server/*"],
+      "@entity": ["./server/entity"],
+      "@middleware": ["./middleware"]
     }
   },
   "include": [

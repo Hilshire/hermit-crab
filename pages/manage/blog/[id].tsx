@@ -5,6 +5,7 @@ import { Blog as BlogEntity } from "@server/entity";
 import axios from "axios";
 import { useSnackbar } from "@hooks";
 import { getRepo } from '@utils'
+import { jwt } from "@middleware";
 
 interface Props {
   blogJson: string;
@@ -60,9 +61,11 @@ ${type === 'preview' ? data.context : context}
   }
 }
 
-export async function getServerSideProps({params}) {
+export async function getServerSideProps({params, req, res}) {
   const repo = await getRepo<BlogEntity>(BlogEntity)
   const blog = await repo.findOne(params.id);
+  console.log('-- before jwt --')
+  jwt(() => {})(req, res)
 
   return {
       props: {

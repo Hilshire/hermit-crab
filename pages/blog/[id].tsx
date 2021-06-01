@@ -15,12 +15,13 @@ export function Blog({ blogJson }) {
 
   const { title = 'Ops!', context = 'something went wrong' } = data
 
-  return <Markdown>
-    {`
-# ${title}
-${context}
-      `}
-  </Markdown>
+  return <div className="blog">
+    <section className="banner">
+      <div className="title">{title}</div>
+      <img className="image" src={`https://picsum.photos/seed/${title}/800/1000`}></img>
+    </section>
+    { <Markdown className="main-content">{context}</Markdown> }
+  </div>
 }
 
 export function getStaticPaths() {

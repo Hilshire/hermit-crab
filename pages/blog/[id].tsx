@@ -1,4 +1,5 @@
 import Markdown from "markdown-to-jsx";
+import ReactMarkdown from 'react-markdown';
 import { getConnection } from "typeorm";
 import { useRouter } from 'next/router'
 import { Blog as BlogEntity } from "@server/entity";
@@ -20,7 +21,8 @@ export function Blog({ blogJson }) {
       <div className="title">{title}</div>
       <img className="image" src={`https://picsum.photos/seed/${title}/800/1000`}></img>
     </section>
-    { <Markdown className="main-content">{context}</Markdown> }
+    {/* { <Markdown className="main-content">{context}</Markdown> } */}
+    {<ReactMarkdown className="main-content">{context}</ReactMarkdown>}
   </div>
 }
 

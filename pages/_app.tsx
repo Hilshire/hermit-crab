@@ -1,6 +1,7 @@
 import App, { AppContext } from "next/app";
 import type { AppProps /*, AppContext */ } from 'next/app'
 import '../styles/globals.scss'
+import 'markdown-splendor/css/splendor.min.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />

@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sign } from 'jsonwebtoken';
-import { compare, hashSync } from 'bcrypt';
+import { compareSync } from 'bcrypt';
 import { serialize } from 'cookie';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { claim } = req.body;
 
   try {
-    if (await compare(claim, process.env.CLAIM)) {
+    if (compareSync(claim, process.env.CLAIM)) {
       const jwt = sign(
         {
           exp: Math.floor(Date.now() / 1000) + (60 * 60),

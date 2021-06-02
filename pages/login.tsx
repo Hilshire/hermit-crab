@@ -3,13 +3,10 @@ import { FormControl, TextField, Button } from '@material-ui/core';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { hash } from 'bcrypt'
 
 export default function login() {
   const [claim, setClaim] = useState('')
   const { setSnackbar, Snackbar } = useSnackbar()
-
-  const router =  useRouter()
 
   return <> 
     <form>

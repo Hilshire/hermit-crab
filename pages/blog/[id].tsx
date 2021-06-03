@@ -1,9 +1,22 @@
-import Markdown from "markdown-to-jsx";
 import ReactMarkdown from 'react-markdown';
-import { getConnection } from "typeorm";
 import { useRouter } from 'next/router'
 import { Blog as BlogEntity } from "@server/entity";
 import { getRepo } from '@utils'
+import SyntaxHighlighter from 'react-syntax-highlighter';
+
+import { javascript, bash } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+
+const components = {
+  code({node, inline, className, children, ...props}) {
+    const match = /language-(\w+)/.exec(className || '')
+    const language = (match && match[1]) || 'javascript'
+    return !inline ? (
+      <SyntaxHighlighter style={javascript} language={language} PreTag="div" children={String(children).replace(/\n$/, '')} {...props} />
+    ) : (
+      <code className={className} {...props} >{children}</code>
+    )
+  }
+}
 
 export function Blog({ blogJson }) {
   const router = useRouter()
@@ -21,8 +34,7 @@ export function Blog({ blogJson }) {
       <div className="title">{title}</div>
       <img className="image" src={`https://picsum.photos/seed/${title}/800/1000`}></img>
     </section>
-    {/* { <Markdown className="main-content">{context}</Markdown> } */}
-    {<ReactMarkdown className="main-content">{context}</ReactMarkdown>}
+    {<ReactMarkdown className="main-content" components={components}>{context}</ReactMarkdown>}
   </div>
 }
 

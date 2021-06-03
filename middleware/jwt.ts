@@ -1,8 +1,9 @@
+import { ServerResponse } from 'http';
 import jwt from 'jsonwebtoken';
 import { NextApiResponse } from 'next';
 import { CustomRequest, JwtDecode } from 'utils/type';
 
-export default handler => async (req: CustomRequest, res: NextApiResponse) => {
+export default handler => async (req: CustomRequest, res: NextApiResponse | ServerResponse) => {
     try {
         if (!req.cookies.token) {
             return handlerError(req, res)
@@ -20,9 +21,14 @@ export default handler => async (req: CustomRequest, res: NextApiResponse) => {
     }
 }
 
-function handlerError(req, res) {
-    res.writeHead(301, {
-        Location: `/login?target=${req.url}`
-    })
-    return res.end()
+function handlerError(req, res: NextApiResponse | ServerResponse) {
+    if ('redirect' in res) {
+        return res.json({code: 2, location: `/login?target=${req.url}`})
+    }
+    else {
+        res.writeHead(303, {
+            Location: `/login?target=${req.url}`
+        })
+        return res.end()
+    }
 }

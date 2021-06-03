@@ -1,5 +1,5 @@
 import { FunctionComponent, useState } from "react";
-import Markdown from 'markdown-to-jsx';
+import Markdown from 'react-markdown';
 import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
 import { Blog as BlogEntity } from "@server/entity";
 import axios from "axios";

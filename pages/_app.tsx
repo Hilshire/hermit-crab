@@ -1,7 +1,22 @@
-import App, { AppContext } from "next/app";
 import type { AppProps /*, AppContext */ } from 'next/app'
+import axios from 'axios'
 import '../styles/globals.scss'
-import 'markdown-splendor/css/splendor.min.css'
+
+// axios
+axios.interceptors.response.use(res => {
+  if (/(.+)?application\/json(.+)?/.exec(res.headers['content-type'])) {
+    try {
+      if (res.data?.code === 2) {
+        setTimeout(() => {
+          location.href = res.data?.location
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  return res
+})
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />

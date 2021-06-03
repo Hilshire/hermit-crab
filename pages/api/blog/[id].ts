@@ -16,11 +16,12 @@ const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
       } catch (e) {
         res.status(500).json({ code: 0, message: e })
       }
-      break
+      break;
     case 'PUT':
       const { title, context } = req.body
       await repo.update(id, { title, context })
       res.status(200).json({ code: 1 })
+      break;
     default:
       res.status(405).json({ code: 0 })
   }

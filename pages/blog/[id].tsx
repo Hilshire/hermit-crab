@@ -5,8 +5,9 @@ import { getRepo } from '@utils'
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import { javascript, bash } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 
-const components = {
+const components: Partial<NormalComponents & SpecialComponents> = {
   code({node, inline, className, children, ...props}) {
     const match = /language-(\w+)/.exec(className || '')
     const language = (match && match[1]) || 'javascript'

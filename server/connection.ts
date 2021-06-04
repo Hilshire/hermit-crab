@@ -16,6 +16,7 @@ export function prepareConnection() {
       }
 
       const connectionOptions = await getConnectionOptions(process.env.NODE_ENV);
+      console.log('------->', process.env.NODE_ENV, connectionOptions);
       await createConnection(
         Object.assign(connectionOptions, {
           entities: [Blog, Tag, Essay, Comment, Tip],

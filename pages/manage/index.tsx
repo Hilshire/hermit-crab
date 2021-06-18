@@ -1,11 +1,10 @@
 import { FunctionComponent, useState, useEffect } from 'react';
 import { getRepo } from '@utils'
 import { Blog as BlogEntity } from "@server/entity";
-import { FormControl, TextField, Button, TableRow, TableCell } from '@material-ui/core';
+import { FormControl, TextField, Button, TableRow, TableCell, Paper, Container } from '@material-ui/core';
 import axios from 'axios';
 import { useSnackbar, useAlert } from '@hooks';
 import { DataTable } from '@components'
-import Link from 'next/link'
 
 interface Props {
     blogsJson: string;
@@ -20,26 +19,31 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
 
     const blogs: BlogEntity[] = JSON.parse(blogsJson);
 
-    return <div>
-        <form>
-            <FormControl>
-                <TextField id="blog-title" label="blog title" value={title} onChange={(e) => setTitle(e.target.value)} />
-            </FormControl>
-            <FormControl fullWidth>
-                <TextField id="blog-content" label="blog content" multiline value={context} onChange={(e) => setContext(e.target.value)} />
-            </FormControl>
-        </form>
-        <Button color="primary" onClick={submit}>submit</Button>
-        <DataTable
-            data={blogs}
-            columns={['id', 'title']}
-            heads={['id', 'title']}
-            operator={(row) => <TableCell>
-                    <Button onClick={() => detail(row)}>查看</Button>
-                    <Button onClick={() => handleDeleteClick(row)}>删除</Button>
-                </TableCell>}
-        >
-        </DataTable>
+    return <div className="manage">
+        <Container component="section">
+            <form>
+                <FormControl>
+                    <TextField id="blog-title" label="blog title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                </FormControl>
+                <FormControl fullWidth>
+                    <TextField id="blog-content" label="blog content" multiline value={context} onChange={(e) => setContext(e.target.value)} />
+                </FormControl>
+            </form>
+            <Button color="primary" onClick={submit}>submit</Button>
+        </Container>
+
+        <Container component="section">
+            <DataTable
+                data={blogs}
+                columns={['id', 'title']}
+                heads={['id', 'title']}
+                operator={(row) => <TableCell>
+                        <Button onClick={() => detail(row)}>查看</Button>
+                        <Button onClick={() => handleDeleteClick(row)}>删除</Button>
+                    </TableCell>}
+            >
+            </DataTable>
+        </Container>
         <Snackbar></Snackbar>
         <Alert>
             <div>确定要删除{currentRow && currentRow.title}吗？</div>

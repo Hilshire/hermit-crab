@@ -25,7 +25,8 @@
       "@utils": ["./utils"],
       "@server/*": ["./server/*"],
       "@entity": ["./server/entity"],
-      "@middleware": ["./middleware"]
+      "@middleware": ["./middleware"],
+      "@styles": ["./styles"]
     }
   },
   "include": [

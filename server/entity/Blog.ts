@@ -1,28 +1,31 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable,
+  CreateDateColumn, UpdateDateColumn, OneToMany,
+} from 'typeorm';
 import Tag from './Tag';
 import Comment from './Comment';
 
 @Entity()
 export default class Blog {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column('varchar', {length: 50})
-    title: string;
+  @Column('varchar', { length: 50 })
+  title: string;
 
-    @Column('blob')
-    context: string;
+  @Column('blob')
+  context: string;
 
-    @ManyToMany('Tag')
-    @JoinTable()
-    tags: Tag[];
-    
-    @OneToMany('Comment', 'blog')
-    comments: Comment[];
+  @ManyToMany('Tag')
+  @JoinTable()
+  tags: Tag[];
 
-    @CreateDateColumn()
-    createdAt: string;
+  @OneToMany('Comment', 'blog')
+  comments: Comment[];
 
-    @UpdateDateColumn()
-    lastUpdateAt: string;
+  @CreateDateColumn()
+  createdAt: string;
+
+  @UpdateDateColumn()
+  lastUpdateAt: string;
 }

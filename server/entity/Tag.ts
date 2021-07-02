@@ -1,10 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column,
+} from 'typeorm';
 
 @Entity()
 export default class Tag {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column('varchar', {length: 20})
-    name: string;
+  @Column('varchar', { length: 20 })
+  name: string;
 }

@@ -1,0 +1,25 @@
+{
+  "extends": ["airbnb-typescript"],
+  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "no-console": "off",
+    "consistent-return": "off",
+    "no-restricted-globals": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-unused-expressions": "off",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
+    "import/no-cycle": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}

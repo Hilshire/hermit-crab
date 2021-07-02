@@ -1,9 +1,9 @@
-import { NextApiRequest } from "next";
+import { NextApiRequest } from 'next';
 
 export interface CustomRequest extends NextApiRequest {
-    token: string
+  token: string
 }
 
 export interface JwtDecode {
-    token: string
+  token: string
 }

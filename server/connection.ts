@@ -1,5 +1,7 @@
-import { getConnectionOptions, createConnection, getConnection } from "typeorm";
-import { Blog, Tag, Essay, Comment, Tip  } from '../server/entity'
+import { getConnectionOptions, createConnection, getConnection } from 'typeorm';
+import {
+  Blog, Tag, Essay, Comment, Tip,
+} from './entity';
 
 let connectionReadyPromise: Promise<void> | null = null;
 export function prepareConnection() {
@@ -15,10 +17,10 @@ export function prepareConnection() {
 
       const connectionOptions = await getConnectionOptions(process.env.NODE_ENV);
       await createConnection(
-          Object.assign(connectionOptions, {
-              entities: [ Blog, Tag, Essay, Comment, Tip ]
-          })
-      )
+        Object.assign(connectionOptions, {
+          entities: [Blog, Tag, Essay, Comment, Tip],
+        }),
+      );
     })();
   }
 

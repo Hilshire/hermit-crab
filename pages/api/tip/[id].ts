@@ -1,30 +1,31 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { Tip } from '@server/entity'
-import { getRepo } from '@utils'
-import { jwt } from '@middleware'
-
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { Tip } from '@server/entity';
+import { getRepo } from '@utils';
+import { jwt } from '@middleware';
 
 const deleteOrPutTip = async (req: NextApiRequest, res: NextApiResponse) => {
-  const repo = await getRepo(Tip)
-  const { id } = req.query
-  if (!id) res.status(500).json({ code: 0, message: 'need id' })
+  const repo = await getRepo(Tip);
+  const { id } = req.query;
+  if (!id) res.status(500).json({ code: 0, message: 'need id' });
   switch (req.method) {
     case 'DELETE':
       try {
-        await repo.delete(id)
-        res.status(200).json({ code: 1 })
+        await repo.delete(id);
+        res.status(200).json({ code: 1 });
       } catch (e) {
-        res.status(500).json({ code: 0, message: e })
+        res.status(500).json({ code: 0, message: e });
       }
       break;
     case 'PUT':
-      const { title, context } = req.body
-      await repo.update(id, { title, context })
-      res.status(200).json({ code: 1 })
+    {
+      const { title, context } = req.body;
+      await repo.update(id, { title, context });
+      res.status(200).json({ code: 1 });
       break;
+    }
     default:
-      res.status(405).json({ code: 0 })
+      res.status(405).json({ code: 0 });
   }
-}
+};
 
 export default jwt(deleteOrPutTip);

@@ -1,2 +1,3 @@
 export * from './DataTable';
-export * from './Nav';
+export * from './Header';
+export * from './Footer';

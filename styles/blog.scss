@@ -9,24 +9,3 @@
     width: 50%;
   }
 }
-
-// display
-.blog {
-  max-width: 70%;
-  left: 0;
-  right: 0;
-  margin: auto;
-  margin-top: 4em;
-  .banner {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    .title {
-      font-size: 44px;
-    }
-  }
-  .main-content {
-    font-size: 18px;
-  }
-}
-

@@ -1,6 +1,6 @@
 import ReactMarkdown from 'react-markdown';
+import moment from 'moment';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import { Blog as BlogEntity } from '@server/entity';
 import { getRepo } from '@utils';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -33,13 +33,21 @@ export function Blog({ blogJson }) {
 
   const data: BlogEntity = JSON.parse(blogJson);
 
-  const { title = 'Ops!', context = 'something went wrong' } = data;
+  const {
+    title = 'Ops!', context = 'something went wrong', createdAt,
+  } = data;
 
   return (
-    <div className="blog">
+    <div className="blog page-content">
       <section className="banner">
-        <div className="title">{title}</div>
-        <Image className="image" src={`https://picsum.photos/seed/${title}/800/1000`} alt="banner" width={800} height={1000} />
+        <div className="left">
+          <p className="title">{title}</p>
+          <p className="create-time time">
+            创建：
+            {moment(createdAt).format('YYYY-MM-DD')}
+          </p>
+        </div>
+        <img className="image" src={`https://picsum.photos/seed/${title}/1000/800`} alt="banner" />
       </section>
       <ReactMarkdown className="main-content" components={components}>{context}</ReactMarkdown>
     </div>

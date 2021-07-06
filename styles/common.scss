@@ -1,0 +1,50 @@
+// common
+.page-content {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.banner {
+    display: flex;
+    justify-content: space-between;
+    align-self: stretch;
+    align-items: center;
+    background-color: $胡粉;
+    div {
+        width: 50%;
+    }
+    div.left {
+        text-align: center;
+    }
+    .time {
+        font-weight: bold;
+        font-size: 12px;
+    }
+    .title {
+      font-size: 44px;
+      font-family: $font-family-serif;
+    }
+    border-bottom: 1px solid #eee;
+}
+
+.main-content {
+    max-width: 70%;
+    a {
+        text-decoration: underline;
+        color: $千草;
+    }
+    a:visited {
+        color: $御召神纳户;
+    }
+
+    p {
+        line-height: 2em;
+        font-family: $font-family-serif;
+    }
+
+    pre {
+        font-size: 14px;
+    }
+}

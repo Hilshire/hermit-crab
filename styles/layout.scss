@@ -1,0 +1,41 @@
+#__next {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    font-size: 14px;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+    z-index: 1;
+    ul {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        margin-right: 10%;
+        li {
+            height: 4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 4em;
+            cursor: pointer;
+        }
+        li:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.footer {
+    text-align: center;
+    height: 4em;
+    line-height: 4em;
+    background-color: $蓝墨茶;
+    color: #fff;
+    margin-top: 20em;
+    font-size: 12px;
+}

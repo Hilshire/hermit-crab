@@ -1,7 +1,7 @@
 import type { AppProps /* , AppContext */ } from 'next/app';
 import axios from 'axios';
 import '../styles/globals.scss';
-import { Nav } from '@components';
+import { Header, Footer } from '@components';
 import { useRouter } from 'next/router';
 
 // axios
@@ -27,8 +27,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      { !isInManage && <Nav />}
+      { !isInManage && <Header />}
       <Component {...pageProps} />
+      { !isInManage && <Footer />}
     </>
   );
 }

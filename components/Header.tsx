@@ -1,7 +1,7 @@
-export function Nav() {
+export function Header() {
   return (
-    <div>
-      <ul>
+    <div className="header">
+      <ul className="nav">
         <li>blog</li>
         <li>随笔</li>
         <li>Tips</li>

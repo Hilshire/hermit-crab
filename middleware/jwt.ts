@@ -23,11 +23,11 @@ export default (handler) => async (req: CustomRequest, res: NextApiResponse | Se
 
 function handlerError(req, res: NextApiResponse | ServerResponse) {
   if ('redirect' in res) {
-    return res.json({ code: 2, location: `/login?target=${req.url}` });
+    return res.json({ code: 2, location: '/manage/login' });
   }
 
   res.writeHead(303, {
-    Location: `/login?target=${req.url}`,
+    Location: `/manage/login?target=${req.url}`,
   });
   return res.end();
 }

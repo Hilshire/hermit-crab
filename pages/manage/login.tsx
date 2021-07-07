@@ -31,7 +31,7 @@ export default function Login() {
           if (url.searchParams.has('target')) {
             location.href = `${url.origin}${url.searchParams.get('target')}`;
           } else {
-            location.href = `${url.origin}/manage`;
+            location.href = `${url.origin}/manage/blog`;
           }
         });
       }

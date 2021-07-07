@@ -3,18 +3,18 @@ import Markdown from 'react-markdown';
 import {
   FormControl, TextField, Button,
 } from '@material-ui/core';
-import { Blog as BlogEntity } from '@server/entity';
+import { Tip as TipEntity } from '@server/entity';
 import axios from 'axios';
 import { useSnackbar } from '@hooks';
 import { getRepo } from '@utils';
 import { jwt } from '@middleware';
 
 interface Props {
-  blogJson: string;
+  tipJson: string;
 }
 type DetailType = 'edit' | 'preview';
-const Blog: FunctionComponent<Props> = ({ blogJson }) => {
-  const data: BlogEntity = JSON.parse(blogJson);
+const Tip: FunctionComponent<Props> = ({ tipJson }) => {
+  const data: TipEntity = JSON.parse(tipJson);
 
   const [type, setType] = useState<DetailType>('preview');
   const [title, setTitle] = useState(data.title);
@@ -22,14 +22,14 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
   const { setSnackbar, Snackbar } = useSnackbar();
 
   return (
-    <div className="blog-detail">
+    <div className="tip-detail">
       <Button color="primary" onClick={() => setType(type === 'edit' ? 'preview' : 'edit')}>{type === 'edit' ? 'PREVIEW' : 'EDIT' }</Button>
       { type === 'edit' && <Button color="primary" onClick={handleSubmit}>SUBMIT</Button> }
       <div className="edit-area">
         <div className="edit-section">
           <form>
             <FormControl fullWidth>
-              { type === 'edit' ? <TextField id="blog-title" label="blog title" value={title} onChange={(e) => setTitle(e.target.value)} /> : <div>{data.title}</div>}
+              { type === 'edit' ? <TextField id="tip-title" label="tip title" value={title} onChange={(e) => setTitle(e.target.value)} /> : <div>{data.title}</div>}
             </FormControl>
             <FormControl fullWidth>
               {
@@ -60,7 +60,7 @@ ${type === 'preview' ? data.context : context}
   );
 
   function handleSubmit() {
-    axios.put(`/api/blog/${data.id}`, { title, context })
+    axios.put(`/api/tip/${data.id}`, { title, context })
       .then((res) => {
         if (res.data.code) {
           setSnackbar(true, 'ok', 'success', location.reload.bind(location));
@@ -72,15 +72,15 @@ ${type === 'preview' ? data.context : context}
 };
 
 export async function getServerSideProps({ params, req, res }) {
-  const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOne(params.id);
+  const repo = await getRepo<TipEntity>(TipEntity);
+  const tip = await repo.findOne(params.id);
   jwt(() => {})(req, res);
 
   return {
     props: {
-      blogJson: JSON.stringify(blog),
+      tipJson: JSON.stringify(tip),
     },
   };
 }
 
-export default Blog;
+export default Tip;

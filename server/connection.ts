@@ -18,7 +18,7 @@ export function prepareConnection() {
     connectionReadyPromise = (async () => {
       // clean up old connection that references outdated hot-reload classes
       try {
-        const staleConnection = getConnection(process.env.NODE_ENV);
+        const staleConnection = getConnection();
         await staleConnection.close();
       } catch (error) {
         // no stale connection to clean up

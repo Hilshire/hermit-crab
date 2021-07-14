@@ -9,7 +9,7 @@ export default class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('blob')
+  @Column('text')
   context: string;
 
   @ManyToOne('Blog', 'comments')

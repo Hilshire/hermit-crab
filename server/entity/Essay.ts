@@ -11,7 +11,7 @@ export default class Essay {
   @Column('varchar', { length: 50 })
   title: string;
 
-  @Column('blob')
+  @Column('text')
   context: string;
 
   @OneToMany('Comment', 'blog')

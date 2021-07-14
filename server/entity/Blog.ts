@@ -13,7 +13,7 @@ export default class Blog {
   @Column('varchar', { length: 50 })
   title: string;
 
-  @Column('blob')
+  @Column('text')
   context: string;
 
   @ManyToMany('Tag')

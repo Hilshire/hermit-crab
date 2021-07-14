@@ -11,7 +11,7 @@ export default class Tip {
   @Column('varchar', { length: 50 })
   title: string;
 
-  @Column('blob')
+  @Column('text')
   context: string;
 
   @ManyToMany('Tag')

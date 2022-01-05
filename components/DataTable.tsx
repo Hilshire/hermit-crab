@@ -45,5 +45,10 @@ function DataTable<T extends { id: number | string }>({
   );
 }
 
+DataTable.defaultProps = {
+  columns: [],
+  operator: [],
+};
+
 export { DataTable };
 export default DataTable;

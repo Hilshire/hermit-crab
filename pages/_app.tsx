@@ -1,9 +1,15 @@
 import type { AppProps /* , AppContext */ } from 'next/app';
 import axios from 'axios';
 import '../styles/globals.scss';
-import { Header, Footer } from '@components';
+import { Header } from '@components';
 import { useRouter } from 'next/router';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
+const darkTheme = createTheme({
+  palette: {
+    type: 'dark',
+  },
+});
 // axios
 axios.interceptors.response.use((res) => {
   if (/(.+)?application\/json(.+)?/.exec(res.headers['content-type'])) {
@@ -27,9 +33,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      { !isInManage && <Header />}
-      <Component {...pageProps} />
-      { !isInManage && <Footer />}
+      <ThemeProvider theme={darkTheme}>
+        { !isInManage && <Header />}
+        <Component {...pageProps} />
+      </ThemeProvider>
     </>
   );
 }

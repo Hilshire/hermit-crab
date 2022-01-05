@@ -5,17 +5,18 @@ import { Blog as BlogEntity } from '@server/entity';
 import { getRepo } from '@utils';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
-import { javascript } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 
 const components: Partial<NormalComponents & SpecialComponents> = {
+  // @ts-ignore
   code({
-    inline, className, children, ...props
+    node, inline, className, children, ...props
   }) {
     const match = /language-(\w+)/.exec(className || '');
     const language = (match && match[1]) || 'javascript';
     return !inline ? (
-      <SyntaxHighlighter style={javascript} language={language} PreTag="div" {...props}>
+      <SyntaxHighlighter style={nord} language={language} PreTag="div" {...props}>
         { String(children).replace(/\n$/, '') }
       </SyntaxHighlighter>
     ) : (

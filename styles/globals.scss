@@ -6,6 +6,7 @@ body {
   ::-webkit-scrollbar {
     background-color: $墨;
     width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-thumb {
     background-color: $白鼠;
@@ -15,6 +16,10 @@ body {
   margin: 0;
   font-family: "Hiragino Sans GB", "Microsoft YaHei",
     "WenQuanYi Micro Hei", sans-serif;
+}
+
+html, body {
+  
 }
 
 a {
@@ -35,3 +40,4 @@ ul {
 @import "./blog.scss";
 @import "./manage.scss";
 @import "./about.scss";
+@import "./media.scss";

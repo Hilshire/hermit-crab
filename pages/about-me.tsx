@@ -13,7 +13,8 @@ function AboutMe() {
 
       <p>如果你感兴趣的话，这里有我跑团的文档和工具：</p>
 
-      <Link href="https://small-ruin.github.io/"><a href="./#" target="_blank">hilshire 的房规</a></Link>
+      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+      <Link href="https://small-ruin.github.io/"><a target="_blank">hilshire 的房规</a></Link>
     </pre>
   );
 }

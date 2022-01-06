@@ -7,6 +7,7 @@
 }
 
 .banner {
+    background-color: $吕;
     display: flex;
     justify-content: space-between;
     align-self: stretch;
@@ -25,7 +26,6 @@
       font-size: 44px;
       font-family: $font-family-serif;
     }
-    border-bottom: 1px solid #eee;
 }
 
 .main-content {

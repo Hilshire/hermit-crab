@@ -1,11 +1,19 @@
 import { Blog as BlogEntity } from '@server/entity';
 import { getRepo } from '@utils';
+import Link from 'next/link';
 
 export default function Home({ list }) {
   const blogList = JSON.parse(list);
   return (
     <div className="blog-list">
-      {blogList.map((b) => <div className="blog-list-item">{b.title}</div>)}
+      {blogList.map((b) => (
+        <Link
+          key={b.id}
+          href={`/blog/${b.id}`}
+        >
+          <div className="blog-list-item">{b.title}</div>
+        </Link>
+      ))}
     </div>
   );
 }

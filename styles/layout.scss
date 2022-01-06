@@ -12,31 +12,31 @@
     align-items: stretch;
     justify-content: flex-end;
     z-index: 1;
+    height: 4rem;
     ul {
         display: flex;
         align-items: center;
         margin: 0;
         margin-right: 10%;
         li {
-            height: 4em;
+            height: 4rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 4em;
+            min-width: 4rem;
             cursor: pointer;
         }
         li:hover {
-            text-decoration: underline;
+            color: $白鼠;
         }
     }
 }
 
 .footer {
     text-align: center;
-    height: 4em;
-    line-height: 4em;
-    background-color: $蓝墨茶;
-    color: #fff;
-    margin-top: 20em;
+    height: 4rem;
+    line-height: 4rem;
+    background-color: $墨;
+    color: $白鼠;
     font-size: 12px;
 }

@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 40vh;
 }
 
 .banner {
@@ -19,16 +20,18 @@
         text-align: center;
     }
     .time {
-        font-weight: bold;
-        font-size: 12px;
+        font-size: 18px;
+        color: $白鼠;
     }
     .title {
-      font-size: 44px;
-      font-family: $font-family-serif;
+        font-weight: 600;
+        font-size: 44px;
+        font-family: $font-family-serif;
     }
 }
 
 .main-content {
+    margin-top: 5rem;
     max-width: 70%;
     a {
         text-decoration: underline;
@@ -40,10 +43,13 @@
 
     p {
         line-height: 2em;
-        font-family: $font-family-serif;
     }
 
     pre {
         font-size: 14px;
     }
+}
+
+code {
+    line-height: 1.5;
 }

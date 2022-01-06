@@ -3,11 +3,18 @@
 
 html,
 body {
+  ::-webkit-scrollbar {
+    background-color: $墨;
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: $白鼠;
+  }
   height: 100%;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: "Hiragino Sans GB", "Microsoft YaHei",
+    "WenQuanYi Micro Hei", sans-serif;
 }
 
 a {
@@ -27,4 +34,4 @@ ul {
 @import "./layout.scss";
 @import "./blog.scss";
 @import "./manage.scss";
-// @import "./fluent.css"
+@import "./about.scss";

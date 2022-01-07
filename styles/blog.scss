@@ -12,8 +12,9 @@
 
 // list
 .blog-list, .about-me {
-  margin: 20vh 25vw;
-  min-height: calc(60vh - 8em);
+  margin: 10vh 25vw;
+  min-height: calc(80vh - 8em);
+  position: relative;
 }
 .blog-list-item {
   cursor: pointer;

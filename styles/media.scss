@@ -8,4 +8,11 @@
     .main-content {
         max-width: 90%;
     }
+    .blog-list {
+        margin: 5vh 5vw;
+        .blog-list-item {
+            font-size: 3vh;
+            line-height: 1.5;
+        }
+    }
 }

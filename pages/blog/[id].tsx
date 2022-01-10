@@ -79,7 +79,7 @@ export async function getStaticProps({ params }) {
     props: {
       blogJson: JSON.stringify(blog),
     },
-
+    revalidate: 60 * 60 * 24,
   };
 }
 

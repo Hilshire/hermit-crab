@@ -2,6 +2,7 @@ import type { AppProps /* , AppContext */ } from 'next/app';
 import axios from 'axios';
 import '../styles/globals.scss';
 import { Header, Footer } from '@components';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
@@ -33,6 +34,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <title>hilshire&apos;s blog</title>
+        <link rel="icon" href="/Police_dice.png" />
+      </Head>
       <ThemeProvider theme={darkTheme}>
         { !isInManage && <Header /> }
         <Component {...pageProps} />

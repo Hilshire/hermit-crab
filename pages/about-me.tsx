@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 function AboutMe() {
   return (
-    <pre className="about-me">
+    <div className="about-me">
       <p>嗯？欢迎。</p>
 
       <p>我是 hilshire ，是一名普通的前端，过于平凡以至于没什么可以介绍的。</p>
@@ -15,7 +15,7 @@ function AboutMe() {
 
       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
       <Link href="https://small-ruin.github.io/"><a target="_blank">hilshire 的房规</a></Link>
-    </pre>
+    </div>
   );
 }
 

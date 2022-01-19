@@ -4,17 +4,21 @@ import {
 } from 'typeorm';
 import Tag from './Tag';
 import Comment from './Comment';
+import { BlogType } from './type';
 
 @Entity()
 export default class Blog {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 100 })
   title: string;
 
   @Column('text')
   context: string;
+
+  @Column('int', { default: BlogType.COMMON })
+  status: BlogType;
 
   @ManyToMany('Tag')
   @JoinTable()
@@ -24,7 +28,7 @@ export default class Blog {
   comments: Comment[];
 
   @CreateDateColumn()
-  createdAt: string;
+  createAt: string;
 
   @UpdateDateColumn()
   lastUpdateAt: string;

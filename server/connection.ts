@@ -1,6 +1,6 @@
 import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
 import {
-  Blog, Tag, Essay, Comment, Tip,
+  Blog, Tag, Comment,
 } from './entity';
 
 const {
@@ -25,7 +25,7 @@ export function prepareConnection() {
 
       await createConnection(
         Object.assign(getOption(), {
-          entities: [Blog, Tag, Essay, Comment, Tip],
+          entities: [Blog, Tag, Comment],
         }),
       );
     })();
@@ -47,5 +47,10 @@ function getOption(): ConnectionOptions {
     password,
     database,
     synchronize: true,
+    migrations: ['migration/*.js'],
+    cli: { migrationsDir: 'server/migration' },
+    extra: {
+      charset: 'utf8mb4_unicode_ci',
+    },
   };
 }

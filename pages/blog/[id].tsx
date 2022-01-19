@@ -35,7 +35,7 @@ export function Blog({ blogJson }) {
   const data: BlogEntity = JSON.parse(blogJson);
 
   const {
-    title = 'Ops!', context = 'something went wrong', createdAt, lastUpdateAt,
+    title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt,
   } = data;
 
   return (
@@ -45,7 +45,7 @@ export function Blog({ blogJson }) {
           <p className="title">{title}</p>
           <p className="create-time time">
             创建于：
-            {moment(createdAt).format('YYYY-MM-DD')}
+            {moment(createAt).format('YYYY-MM-DD')}
             {' | 最后更新：'}
             {moment(lastUpdateAt).format('YYYY-MM-DD')}
           </p>

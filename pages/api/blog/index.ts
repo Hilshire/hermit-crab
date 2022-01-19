@@ -16,7 +16,8 @@ const createBlog = async (req: NextApiRequest, res: NextApiResponse) => {
         await repo.save(blog);
         res.status(200).json({ code: 1 });
       } catch (e) {
-        res.status(500).json({ code: 0, message: e });
+        console.error(e);
+        res.status(500).json({ code: 0, message: '服务异常' });
       }
       break;
     }

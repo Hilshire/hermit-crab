@@ -35,7 +35,7 @@ export async function getServerSideProps({ query }) {
   const blog = await repo.find({
     skip: (page - 1) * 5,
     take: 5,
-    select: ['title', 'createdAt', 'lastUpdateAt', 'id'],
+    select: ['title', 'createAt', 'lastUpdateAt', 'id'],
     order: {
       id: 'DESC',
     },

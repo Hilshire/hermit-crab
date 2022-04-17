@@ -29,7 +29,7 @@ axios.interceptors.response.use((res) => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-
+  const isInHome = router.pathname === '/';
   const isInManage = /^\/?manage/.exec(router.pathname);
 
   return (
@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={darkTheme}>
         { !isInManage && <Header /> }
         <Component {...pageProps} />
-        { !isInManage && <Footer /> }
+        { !isInManage && !isInHome && <Footer /> }
       </ThemeProvider>
     </>
   );

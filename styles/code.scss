@@ -1,18 +1,23 @@
+@import "./const.scss";
+
 .main-content {
-    pre {
-        code {
-            line-height: 1.5;
-        }
-    
+    code {
+        font-family: $font-family-code;
+    }
+    pre code {
+        line-height: 1.5em;
+    }
+    h2 {
+        text-decoration: underline;
     }
     img {
         max-width: 100%;
     }
     ul {
         list-style-type: square;
-        li {
-            line-height: 2em;
-        }
+    }
+    li {
+        line-height: 2em;
     }
 }
 

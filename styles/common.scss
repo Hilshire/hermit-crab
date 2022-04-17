@@ -5,6 +5,7 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 40vh;
+    word-break: break-word;
 }
 
 .pagination {
@@ -12,7 +13,6 @@
     color: $白鼠;
     font-size: 14px;
     bottom: 0;
-    position: absolute;
 }
 
 .banner {
@@ -39,6 +39,7 @@
     }
     div.right {
         width: 100%;
+        background-color: #434343;
     }
     .time {
         font-size: 18px;
@@ -59,14 +60,20 @@
         color: $千草;
     }
     a:visited {
-        color: $御召神纳户;
+        color: $千草;
     }
 
     p {
         line-height: 2em;
+        margin: auto;
     }
 
     pre {
         font-size: 14px;
+    }
+
+    blockquote {
+        padding-left: 1em;
+        border-left: solid 2px $千草;
     }
 }

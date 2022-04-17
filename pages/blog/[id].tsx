@@ -50,7 +50,10 @@ export function Blog({ blogJson }) {
             {moment(lastUpdateAt).format('YYYY-MM-DD')}
           </p>
         </div>
-        <img className="image" src={`https://picsum.photos/seed/${title}/768/542`} alt="banner" />
+        <div className="right">
+          <img className="banner-image" src={`https://picsum.photos/seed/${title}/768/542`} alt="banner" />
+          <div className="image_placeholder" />
+        </div>
       </section>
       <ReactMarkdown className="main-content" components={components}>{context}</ReactMarkdown>
     </div>

@@ -21,15 +21,24 @@
     justify-content: space-between;
     align-self: stretch;
     align-items: center;
-    & > div, & > img {
+    & > div {
         flex: 1 1 0;
     }
     // https://bugs.chromium.org/p/chromium/issues/detail?id=625560
-    & > img {
+    .banner-image {
         width: 50%;
+        position: absolute;
+        right: 0;
+    }
+    .image_placeholder {
+        width: 50%;
+        margin-bottom: 70.572916666%;
     }
     div.left {
         text-align: center;
+    }
+    div.right {
+        width: 100%;
     }
     .time {
         font-size: 18px;

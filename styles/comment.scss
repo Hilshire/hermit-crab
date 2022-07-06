@@ -1,0 +1,62 @@
+#comment-hook {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-family: $font-family-common;
+    margin-bottom: 15vh;
+    a {
+        border-bottom: none;
+        text-decoration: none;
+        color: $千草;
+    }
+    a:visited {
+        color: $千草;
+    }
+    textarea, button {
+        border-radius: 1px;
+    }
+    .gt-btn-preview {
+        color: $御召神纳户;
+        border-color: $御召神纳户;
+    }
+    .gt-btn-public {
+        background-color: $御召神纳户;
+        border-color: $御召神纳户;
+        &:hover {
+            background-color: $铁御纳户;
+            border-color: $铁御纳户;
+        }
+    }
+    .gt-container {
+        width: 70%;
+    }
+    .gt-meta {
+        border-color: $蓝墨茶;
+    }
+    .gt-ico, .is--poping .gt-ico svg {
+        fill: $白练;
+    }
+    .gt-popup {
+        background-color: $吕;
+        color: $白鼠;
+        a {
+            color: inherit;
+        }
+        a:visited {
+            color: $藤鼠;
+        }
+    }
+    .gt-comment-content {
+        background-color: $吕;
+        &:hover {
+            box-shadow: none;
+        }
+        .gt-comment-body.markdown-body {
+            color: $白练 !important;
+            pre {
+                border-radius: 1px;
+            }
+        }
+
+    }
+}

@@ -7,6 +7,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import { nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
+import { CommentHOC } from '@hocs';
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   // @ts-ignore
@@ -86,4 +87,4 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export default Blog;
+export default CommentHOC(Blog);

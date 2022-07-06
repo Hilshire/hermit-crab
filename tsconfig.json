@@ -26,7 +26,8 @@
       "@server/*": ["./server/*"],
       "@entity": ["./server/entity"],
       "@middleware": ["./middleware"],
-      "@styles": ["./styles"]
+      "@styles": ["./styles"],
+      "@hocs": ["./hocs"],
     }
   },
   "include": [

@@ -35,7 +35,13 @@ function DataTable<T extends { id: number | string }>({
         <TableBody>
           {formattedData.map((i) => (
             <TableRow key={i.id}>
-              {columns.map((c) => <TableCell key={c as string}>{i[c]}</TableCell>)}
+              {
+                columns.map((c) => (
+                  <TableCell key={c as string}>
+                    {i[c] as unknown as string}
+                  </TableCell>
+                ))
+              }
               {operator && operator(i)}
             </TableRow>
           ))}

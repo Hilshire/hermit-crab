@@ -20,15 +20,32 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "paths": {
-      "@components": ["./components"],
-      "@hooks": ["./hooks"],
-      "@utils": ["./utils"],
-      "@server/*": ["./server/*"],
-      "@entity": ["./server/entity"],
-      "@middleware": ["./middleware"],
-      "@styles": ["./styles"],
-      "@hocs": ["./hocs"],
-    }
+      "@components": [
+        "./components"
+      ],
+      "@hooks": [
+        "./hooks"
+      ],
+      "@utils": [
+        "./utils"
+      ],
+      "@server/*": [
+        "./server/*"
+      ],
+      "@entity": [
+        "./server/entity"
+      ],
+      "@middleware": [
+        "./middleware"
+      ],
+      "@styles": [
+        "./styles"
+      ],
+      "@hocs": [
+        "./hocs"
+      ]
+    },
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",

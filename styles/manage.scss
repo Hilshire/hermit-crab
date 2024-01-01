@@ -1,9 +1,22 @@
 @import "./const.scss";
 .manage {
+    // common
     section {
         margin-top: 1rem;
         &:nth-child(1) {
             margin-top: 0;
         }
     }
+
+    // tag
+    .tag-color {
+        width: 1.2rem;
+        height: 1.2rem;
+        border-radius: 2px;
+    }
+    .tag-item {
+        display: flex;
+        gap: 12px;
+    }
 }
+

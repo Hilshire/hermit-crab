@@ -1,13 +1,14 @@
 import { FunctionComponent, useState } from 'react';
 import Markdown from 'react-markdown';
 import {
-  FormControl, TextField, Button,
+  FormControl, TextField, Button, Select, MenuItem,
 } from '@material-ui/core';
 import { Blog as BlogEntity } from '@server/entity';
 import axios from 'axios';
 import { useSnackbar } from '@hooks';
 import { getRepo } from '@utils';
 import { jwt } from '@middleware';
+import { blogTextMap, BlogType } from '@server/entity/type';
 
 interface Props {
   blogJson: string;
@@ -17,6 +18,7 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
   const data: BlogEntity = JSON.parse(blogJson);
 
   const [type, setType] = useState<DetailType>('preview');
+  const [blogType, setBlogType] = useState<BlogType>(data.blogType);
   const [title, setTitle] = useState(data.title);
   const [context, setContext] = useState(data.context);
   const { setSnackbar, Snackbar } = useSnackbar();
@@ -30,6 +32,19 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
           <form>
             <FormControl fullWidth>
               { type === 'edit' ? <TextField id="blog-title" label="blog title" value={title} onChange={(e) => setTitle(e.target.value)} /> : <div>{data.title}</div>}
+            </FormControl>
+            <FormControl fullWidth>
+              {type === 'preview' ? blogTextMap[blogType] : (
+                <Select
+                  labelId="Blog Type"
+                  value={blogType}
+                  onChange={(e) => setBlogType(e.target.value as BlogType)}
+                >
+                  <MenuItem value={BlogType.COMMON}>Common</MenuItem>
+                  <MenuItem value={BlogType.ESSAY}>Essay</MenuItem>
+                  <MenuItem value={BlogType.Note}>Note</MenuItem>
+                </Select>
+              )}
             </FormControl>
             <FormControl fullWidth>
               {
@@ -60,7 +75,7 @@ ${type === 'preview' ? data.context : context}
   );
 
   function handleSubmit() {
-    axios.put(`/api/blog/${data.id}`, { title, context })
+    axios.put(`/api/blog/${data.id}`, { title, context, blogType })
       .then((res) => {
         if (res.data.code) {
           setSnackbar(true, 'ok', 'success', location.reload.bind(location));

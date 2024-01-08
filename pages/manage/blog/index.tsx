@@ -2,17 +2,20 @@ import { FunctionComponent, useState } from 'react';
 import { getRepo } from '@utils';
 import { Blog as BlogEntity } from '@server/entity';
 import {
-  FormControl, TextField, Button, TableCell, Container,
+  FormControl, TextField, Button, TableCell, Container, Select, MenuItem,
 } from '@material-ui/core';
 import axios from 'axios';
 import { useSnackbar, useAlert } from '@hooks';
 import { DataTable } from '@components';
+import { jwt } from '@middleware';
+import { BlogType } from '@server/entity/type';
 
 interface Props {
   blogsJson: string;
 }
 const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
   const [title, setTitle] = useState('');
+  const [blogType, setBlogType] = useState(BlogType.COMMON);
   const [context, setContext] = useState('');
   const [currentRow, setCurrentRow] = useState(null);
   const { setSnackbar, Snackbar } = useSnackbar();
@@ -27,6 +30,17 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
         <form>
           <FormControl>
             <TextField id="blog-title" label="blog title" value={title} onChange={(e) => setTitle(e.target.value)} />
+          </FormControl>
+          <FormControl fullWidth>
+            <Select
+              labelId="Blog Type"
+              value={blogType}
+              onChange={(e) => setBlogType(e.target.value as BlogType)}
+            >
+              <MenuItem value={BlogType.COMMON}>Common</MenuItem>
+              <MenuItem value={BlogType.ESSAY}>Essay</MenuItem>
+              <MenuItem value={BlogType.Note}>Note</MenuItem>
+            </Select>
           </FormControl>
           <FormControl fullWidth>
             <TextField id="blog-content" label="blog content" multiline value={context} onChange={(e) => setContext(e.target.value)} />
@@ -92,9 +106,12 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
   }
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req, res }) {
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blogs = await repo.find();
+  const blogs = await repo.find({ order: { id: 'DESC' } });
+
+  jwt()(req, res);
+
   return {
     props: {
       blogsJson: JSON.stringify(blogs),

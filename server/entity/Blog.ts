@@ -18,7 +18,7 @@ export default class Blog {
   context: string;
 
   @Column('int', { default: BlogType.COMMON })
-  status: BlogType;
+  blogType: BlogType;
 
   @ManyToMany('Tag')
   @JoinTable()

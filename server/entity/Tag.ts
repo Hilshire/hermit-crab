@@ -1,7 +1,6 @@
 import {
   Entity, PrimaryGeneratedColumn, Column,
 } from 'typeorm';
-import { CollectionType } from './type';
 
 @Entity()
 export default class Tag {
@@ -11,6 +10,6 @@ export default class Tag {
   @Column('varchar', { length: 20 })
   name: string;
 
-  @Column('int', { default: CollectionType.TAG })
-  type: CollectionType;
+  @Column('varchar', { length: 7 })
+  color: string;
 }

@@ -19,8 +19,8 @@ const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
     case 'PUT':
     {
-      const { title, context } = req.body;
-      await repo.update(id, { title, context });
+      const { title, context, blogType } = req.body;
+      await repo.update(id, { title, context, blogType });
       res.status(200).json({ code: 1 });
       break;
     }

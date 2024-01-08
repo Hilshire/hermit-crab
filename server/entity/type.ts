@@ -1,9 +1,11 @@
 export enum BlogType {
   COMMON = 1,
-  ISSUES,
-  SERIES,
+  ESSAY,
+  Note,
 }
-export enum CollectionType {
-  TAG = 1,
-  SERIES,
-}
+
+export const blogTextMap = {
+  [BlogType.COMMON]: 'Common',
+  [BlogType.ESSAY]: 'Essay',
+  [BlogType.Note]: 'Note',
+};

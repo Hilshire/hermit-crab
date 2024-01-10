@@ -3,13 +3,14 @@ import { BlogType } from '@server/entity/type';
 import { getRepo } from '@utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Footer } from '@components';
 
 export default function Home({ list, count }) {
   const router = useRouter();
   const blogList = JSON.parse(list);
   const { type = '' } = router.query;
   const page = router.query.page as string || 1;
-  const endPage = count / 5;
+  const endPage = count === 0 ? 1 : Math.ceil(count / 5);
 
   return (
     <>
@@ -28,6 +29,7 @@ export default function Home({ list, count }) {
           { (page < endPage) && <Link href={`/?type=${type}&page=${+page + 1}`}>下一页</Link> }
         </div>
       </div>
+      { endPage === +page && <Footer />}
     </>
   );
 }

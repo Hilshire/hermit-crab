@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sign } from 'jsonwebtoken';
-import { compareSync } from 'bcrypt';
+import { compareSync } from 'bcryptjs';
 import { serialize } from 'cookie';
 
 const login = async (req: NextApiRequest, res: NextApiResponse) => {

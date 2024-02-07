@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useSnackbar, useAlert } from '@hooks';
 import { DataTable } from '@components';
 import { jwt } from '@middleware';
-import { BlogType } from '@server/entity/type';
+import { BlogType, blogTextMap } from '@server/entity/type';
 
 interface Props {
   blogsJson: string;
@@ -37,9 +37,10 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
               value={blogType}
               onChange={(e) => setBlogType(e.target.value as BlogType)}
             >
-              <MenuItem value={BlogType.COMMON}>Common</MenuItem>
-              <MenuItem value={BlogType.ESSAY}>Essay</MenuItem>
-              <MenuItem value={BlogType.Note}>Note</MenuItem>
+              {
+                Object.keys(blogTextMap)
+                  .map((key) => <MenuItem key={key} value={key}>{blogTextMap[key]}</MenuItem>)
+              }
             </Select>
           </FormControl>
           <FormControl fullWidth>

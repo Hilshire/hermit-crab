@@ -25,30 +25,37 @@ export default function Home({ list, count }) {
         ))}
         <div className="pagination">
           {/* TODO: enhance query */}
-          { +page > 1 && <Link href={`/?type=${type}&page=${+page - 1}`}>上一页&nbsp;&nbsp;&nbsp;</Link> }
-          { (page < endPage) && <Link href={`/?type=${type}&page=${+page + 1}`}>下一页</Link> }
+          {+page > 1 && <Link href={`/?type=${type}&page=${+page - 1}`}>上一页&nbsp;&nbsp;&nbsp;</Link>}
+          {(page < endPage) && <Link href={`/?type=${type}&page=${+page + 1}`}>下一页</Link>}
         </div>
       </div>
-      { endPage === +page && <Footer />}
+      {endPage === +page && <Footer />}
     </>
   );
 }
 
 export async function getServerSideProps({ query }) {
-  const { page = 1, type = BlogType.COMMON } = query || {};
+  const { page = 1 } = query || {};
+  let { type } = query || {}
+
+  if (!type) type = `${BlogType.COMMON}${BlogType.NOTE}`
+
   const repo = await getRepo<BlogEntity>(BlogEntity);
 
-  const where = { blogType: type || BlogType.COMMON };
-  const blog = await repo.find({
-    where,
-    skip: (page - 1) * 5,
-    take: 5,
-    select: ['title', 'createAt', 'lastUpdateAt', 'id'],
-    order: {
-      id: 'DESC',
-    },
-  });
-  const count = await repo.count({ where });
+  const blogBuilder = repo
+    .createQueryBuilder('blog')
+    .leftJoinAndSelect("blog.tags", "tag")
+    .select(['blog.title', 'blog.createAt', 'blog.lastUpdateAt', 'blog.id', 'blog.blogType', 'tag.name'])
+    .where('blog.blogType IN (:...types)', { types: type.split('') })
+
+
+  const blog = await blogBuilder
+    .skip((page - 1) * 5)
+    .take(5)
+    .orderBy('blog.createAt', 'DESC')
+    .getMany()
+  const count = await blogBuilder.getCount()
+
   return {
     props: {
       list: JSON.stringify(blog),

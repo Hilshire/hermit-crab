@@ -25,13 +25,13 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
 
   return (
     <div className="blog-detail">
-      <Button color="primary" onClick={() => setType(type === 'edit' ? 'preview' : 'edit')}>{type === 'edit' ? 'PREVIEW' : 'EDIT' }</Button>
-      { type === 'edit' && <Button color="primary" onClick={handleSubmit}>SUBMIT</Button> }
+      <Button color="primary" onClick={() => setType(type === 'edit' ? 'preview' : 'edit')}>{type === 'edit' ? 'PREVIEW' : 'EDIT'}</Button>
+      {type === 'edit' && <Button color="primary" onClick={handleSubmit}>SUBMIT</Button>}
       <div className="edit-area">
         <div className="edit-section">
           <form>
             <FormControl fullWidth>
-              { type === 'edit' ? <TextField id="blog-title" label="blog title" value={title} onChange={(e) => setTitle(e.target.value)} /> : <div>{data.title}</div>}
+              {type === 'edit' ? <TextField id="blog-title" label="blog title" value={title} onChange={(e) => setTitle(e.target.value)} /> : <div>{data.title}</div>}
             </FormControl>
             <FormControl fullWidth>
               {type === 'preview' ? blogTextMap[blogType] : (
@@ -40,24 +40,25 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
                   value={blogType}
                   onChange={(e) => setBlogType(e.target.value as BlogType)}
                 >
-                  <MenuItem value={BlogType.COMMON}>Common</MenuItem>
-                  <MenuItem value={BlogType.ESSAY}>Essay</MenuItem>
-                  <MenuItem value={BlogType.Note}>Note</MenuItem>
+                  {
+                    Object.keys(blogTextMap)
+                      .map((key) => <MenuItem key={key} value={key}>{blogTextMap[key]}</MenuItem>)
+                  }
                 </Select>
               )}
             </FormControl>
             <FormControl fullWidth>
               {
-              type === 'preview'
-                ? data.context
-                : (
-                  <TextField
-                    multiline
-                    value={context}
-                    onChange={(e) => setContext(e.target.value)}
-                  />
-                )
-            }
+                type === 'preview'
+                  ? data.context
+                  : (
+                    <TextField
+                      multiline
+                      value={context}
+                      onChange={(e) => setContext(e.target.value)}
+                    />
+                  )
+              }
             </FormControl>
           </form>
         </div>
@@ -88,8 +89,8 @@ ${type === 'preview' ? data.context : context}
 
 export async function getServerSideProps({ params, req, res }) {
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOne(params.id);
-  jwt(() => {})(req, res);
+  const blog = await repo.findOneBy({ id: params.id });
+  jwt(() => { })(req, res);
 
   return {
     props: {

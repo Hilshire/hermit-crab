@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState, useRef } from 'react';
 import { getRepo } from '@utils';
 import { Blog as BlogEntity } from '@server/entity';
 import {
@@ -17,10 +17,9 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
   const [title, setTitle] = useState('');
   const [blogType, setBlogType] = useState(BlogType.COMMON);
   const [context, setContext] = useState('');
-  const [currentRow, setCurrentRow] = useState(null);
+  const currentRow = useRef<BlogEntity | null>(null)
   const { setSnackbar, Snackbar } = useSnackbar();
-  // hook 如果传的是 function 会调用一次，用来获得初始 state。所以这里再包一层
-  const { setVisible: setAlertVisible, Alert } = useAlert(() => deleteBlog);
+  const { setVisible: setAlertVisible, Alert } = useAlert(deleteBlog)
 
   const blogs: BlogEntity[] = JSON.parse(blogsJson);
 
@@ -67,7 +66,7 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
       <Alert>
         <div>
           确定要删除
-          {currentRow && currentRow.title}
+          {currentRow && currentRow.current?.title}
           吗？
         </div>
       </Alert>
@@ -76,7 +75,7 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
 
   function submit() {
     axios
-      .put('/api/blog', { title, context })
+      .put('/api/blog', { title, context, blogType })
       .then((res) => {
         if (res.data.code) {
           setSnackbar(true, 'ok', 'success', location.reload.bind(location));
@@ -91,15 +90,15 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
   }
   function handleDeleteClick(row) {
     setAlertVisible(true);
-    setCurrentRow(row);
+    currentRow.current = row;
   }
   function deleteBlog() {
-    if (!currentRow?.id) return setSnackbar(true, 'no id', 'error');
-    const { id } = currentRow;
+    if (!currentRow.current?.id) return setSnackbar(true, 'no id', 'error');
+    const { id } = currentRow.current;
     axios.delete(`/api/blog/${id}`).then(
       (res) => {
         if (res.data.code) {
-          setSnackbar(true, 'ok', 'success', location.reload);
+          setSnackbar(true, 'ok', 'success', location.reload.bind(location));
         } else setSnackbar(true, res.data.message || 'ops', 'error');
       },
       () => setSnackbar(true, 'ops', 'error'),

@@ -52,14 +52,17 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
       <Container component="section">
         <DataTable
           data={blogs}
-          columns={['id', 'title']}
-          heads={['id', 'title']}
+          columns={['id', 'title', 'blogType']}
+          heads={['id', 'title', 'blogType']}
           operator={(row) => (
             <TableCell>
               <Button onClick={() => detail(row)}>查看</Button>
               <Button onClick={() => handleDeleteClick(row)}>删除</Button>
             </TableCell>
           )}
+          formatter={{
+            blogType: (row) => blogTextMap[row.blogType]
+          }}
         />
       </Container>
       <Snackbar />

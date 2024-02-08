@@ -8,16 +8,17 @@ interface Props<T extends { id: number | string }> {
   columns?: (keyof T)[],
   data: T[],
   operator?: (c: Partial<T>) => ReactNode,
+  formatter?: Partial<Record<keyof T, (T) => T[keyof T]>>
 }
 
 function DataTable<T extends { id: number | string }>({
-  heads, columns, data, operator,
+  heads, columns, data, operator, formatter
 }: PropsWithChildren<Props<T>>) {
   const formattedData = data.map((i) => {
     const r: Partial<T> = {};
     columns.forEach((c) => {
       if (Object.prototype.hasOwnProperty.call(i, c)) {
-        r[c] = i[c];
+        r[c] = formatter?.[c]?.(i) || i[c];
       }
     });
     return r;
@@ -28,8 +29,8 @@ function DataTable<T extends { id: number | string }>({
       <Table>
         <TableHead>
           <TableRow>
-            { heads.map((head) => <TableCell key={head}>{head}</TableCell>)}
-            { operator && <TableCell>operator</TableCell>}
+            {heads.map((head) => <TableCell key={head}>{head}</TableCell>)}
+            {operator && <TableCell>operator</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>

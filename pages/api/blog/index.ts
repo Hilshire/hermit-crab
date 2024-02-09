@@ -8,11 +8,11 @@ const createBlog = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case 'PUT':
     {
-      const { title, context, blogType} = req.body || {}
-      const blog = new Blog()
+      const { title, context, blogType } = req.body || {};
+      const blog = new Blog();
       blog.title = title;
       blog.context = context;
-      blog.blogType = blogType
+      blog.blogType = blogType;
 
       try {
         await repo.save(blog);

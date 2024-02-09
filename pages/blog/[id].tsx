@@ -74,7 +74,7 @@ export async function getStaticProps({ params }) {
     return { notFound: true };
   }
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOne(params.id);
+  const blog = await repo.findOneBy({ id: params.id });
   if (!blog) {
     return { notFound: true };
   }

@@ -20,10 +20,13 @@ export function useSnackbar(type: Color = 'success') {
       context && setContext(context);
       cb && setCb(cb);
     },
-    Snackbar: () => {
-      return (<Snackbar open={visible} autoHideDuration={3000} onClose={cb} >
-        < Alert severity={severity} > {context}</Alert>
-      </Snackbar >)
-    },
+    Snackbar: () => (
+      <Snackbar open={visible} autoHideDuration={3000} onClose={cb}>
+        <Alert severity={severity}>
+          {' '}
+          {context}
+        </Alert>
+      </Snackbar>
+    ),
   };
 }

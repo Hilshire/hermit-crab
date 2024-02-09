@@ -36,25 +36,24 @@ export default function Home({ list, count }) {
 
 export async function getServerSideProps({ query }) {
   const { page = 1 } = query || {};
-  let { type } = query || {}
+  let { type } = query || {};
 
-  if (!type) type = `${BlogType.COMMON}${BlogType.NOTE}`
+  if (!type) type = `${BlogType.COMMON}${BlogType.NOTE}`;
 
   const repo = await getRepo<BlogEntity>(BlogEntity);
 
   const blogBuilder = repo
     .createQueryBuilder('blog')
-    .leftJoinAndSelect("blog.tags", "tag")
+    .leftJoinAndSelect('blog.tags', 'tag')
     .select(['blog.title', 'blog.createAt', 'blog.lastUpdateAt', 'blog.id', 'blog.blogType', 'tag.name'])
-    .where('blog.blogType IN (:...types)', { types: type.split('') })
-
+    .where('blog.blogType IN (:...types)', { types: type.split('') });
 
   const blog = await blogBuilder
     .skip((page - 1) * 5)
     .take(5)
     .orderBy('blog.createAt', 'DESC')
-    .getMany()
-  const count = await blogBuilder.getCount()
+    .getMany();
+  const count = await blogBuilder.getCount();
 
   return {
     props: {

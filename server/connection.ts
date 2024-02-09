@@ -1,4 +1,4 @@
-import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
+import { DataSourceOptions, DataSource } from 'typeorm';
 import {
   Blog, Tag, Comment,
 } from './entity';
@@ -11,30 +11,24 @@ const {
   DATABASE_NAME: database = 'blog',
 } = process.env;
 
-let connectionReadyPromise: Promise<void> | null = null;
+let appDataSource: Promise<DataSource> | null = null;
 export function prepareConnection() {
-  if (!connectionReadyPromise) {
-    connectionReadyPromise = (async () => {
-      // clean up old connection that references outdated hot-reload classes
-      try {
-        const staleConnection = getConnection();
-        await staleConnection.close();
-      } catch (error) {
-        // no stale connection to clean up
-      }
-
-      await createConnection(
+  if (!appDataSource) {
+    appDataSource = (async () => {
+      const appDataSource = new DataSource(
         Object.assign(getOption(), {
           entities: [Blog, Tag, Comment],
         }),
       );
+
+      return appDataSource.initialize();
     })();
   }
 
-  return connectionReadyPromise;
+  return appDataSource;
 }
 
-function getOption(): ConnectionOptions {
+function getOption(): DataSourceOptions {
   const portNum = parseInt(port, 10);
   if (isNaN(portNum)) {
     throw new Error('error port');
@@ -48,7 +42,6 @@ function getOption(): ConnectionOptions {
     database,
     synchronize: true,
     migrations: ['migration/*.js'],
-    cli: { migrationsDir: 'server/migration' },
     extra: {
       charset: 'utf8mb4_unicode_ci',
     },

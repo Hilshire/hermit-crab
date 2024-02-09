@@ -11,8 +11,9 @@ interface Props<T extends { id: number | string }> {
   formatter?: Partial<Record<keyof T, (T) => T[keyof T]>>
 }
 
+DataTable.defaultProps = { formatter: {}, columns: [] };
 function DataTable<T extends { id: number | string }>({
-  heads, columns, data, operator, formatter
+  heads, columns, data, operator, formatter,
 }: PropsWithChildren<Props<T>>) {
   const formattedData = data.map((i) => {
     const r: Partial<T> = {};

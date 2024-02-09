@@ -17,9 +17,9 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
   const [title, setTitle] = useState('');
   const [blogType, setBlogType] = useState(BlogType.COMMON);
   const [context, setContext] = useState('');
-  const currentRow = useRef<BlogEntity | null>(null)
+  const currentRow = useRef<BlogEntity | null>(null);
   const { setSnackbar, Snackbar } = useSnackbar();
-  const { setVisible: setAlertVisible, Alert } = useAlert(deleteBlog)
+  const { setVisible: setAlertVisible, Alert } = useAlert(deleteBlog);
 
   const blogs: BlogEntity[] = JSON.parse(blogsJson);
 
@@ -61,7 +61,7 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
             </TableCell>
           )}
           formatter={{
-            blogType: (row) => blogTextMap[row.blogType]
+            blogType: (row) => blogTextMap[row.blogType],
           }}
         />
       </Container>

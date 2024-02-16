@@ -7,8 +7,8 @@ import { getRepo } from '@utils';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
-import { CommentHOC } from '@hocs';
 import { DEFAULT_APP_TITLE } from '@const';
+import { UtterancesComments } from '@components';
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   // @ts-ignore
@@ -64,6 +64,7 @@ export function Blog({ blogJson }) {
         </div>
       </section>
       <ReactMarkdown className="main-content" components={components}>{context}</ReactMarkdown>
+      <UtterancesComments />
     </div>
   );
 }
@@ -94,4 +95,4 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export default CommentHOC(Blog);
+export default Blog;

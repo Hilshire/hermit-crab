@@ -6,8 +6,8 @@ export function AppLoading(props = {}) {
   const [showLoading, setShowLoading] = useState(false);
 
   useRouteChange(
-    () => { setShowLoading(true); console.log('start', showLoading); },
-    () => { setShowLoading(false); console.log('end', showLoading); },
+    () => setShowLoading(true),
+    () => setShowLoading(false),
   );
 
   return showLoading ? <LinearProgress {...props} /> : null;

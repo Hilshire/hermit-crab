@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToOne,
+  Entity, PrimaryGeneratedColumn, Column, ManyToOne, Relation,
 } from 'typeorm';
 import Blog from './Blog';
 
@@ -14,6 +14,6 @@ export default class Comment {
   @Column('text')
   context: string;
 
-  @ManyToOne('Blog', 'comments')
-  blog: Blog;
+  @ManyToOne(() => Blog, (blog) => blog.comments)
+  blog: Relation<Blog>;
 }

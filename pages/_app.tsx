@@ -1,7 +1,8 @@
 import type { AppProps /* , AppContext */ } from 'next/app';
 import axios from 'axios';
 import '../styles/globals.scss';
-import { Header, Footer } from '@components';
+import { Header, Footer, AppLoading } from '@components';
+import { useRestoreAppTitle } from '@hooks';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -32,13 +33,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   const isInHome = router.pathname === '/';
   const isInManage = /^\/?manage/.exec(router.pathname);
 
+  useRestoreAppTitle();
+
   return (
     <>
       <Head>
-        <title>hilshire&apos;s blog</title>
         <link rel="icon" href="/Police_dice.png" />
       </Head>
       <ThemeProvider theme={darkTheme}>
+        <AppLoading />
         { !isInManage && <Header /> }
         <Component {...pageProps} />
         { !isInManage && !isInHome && <Footer /> }

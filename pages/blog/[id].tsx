@@ -1,13 +1,14 @@
+import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { Blog as BlogEntity } from '@server/entity';
 import { getRepo } from '@utils';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-
 import { nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 import { CommentHOC } from '@hocs';
+import { DEFAULT_APP_TITLE } from '@const';
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   // @ts-ignore
@@ -38,6 +39,12 @@ export function Blog({ blogJson }) {
   const {
     title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt,
   } = data;
+
+  useEffect(() => {
+    let appTitle = DEFAULT_APP_TITLE;
+    data.title && (appTitle = `${data.title} - ${DEFAULT_APP_TITLE}`);
+    document.title = appTitle;
+  }, [data]);
 
   return (
     <div className="blog page-content">

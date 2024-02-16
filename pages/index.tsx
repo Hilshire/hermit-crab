@@ -26,7 +26,7 @@ export default function Home({ list, count }) {
         <div className="pagination">
           {/* TODO: enhance query */}
           {+page > 1 && <Link href={`/?type=${type}&page=${+page - 1}`}>上一页&nbsp;&nbsp;&nbsp;</Link>}
-          {(page < endPage) && <Link href={`/?type=${type}&page=${+page + 1}`}>下一页</Link>}
+          {(+page < +endPage) && <Link href={`/?type=${type}&page=${+page + 1}`}>下一页</Link>}
         </div>
       </div>
       {endPage === +page && <Footer />}

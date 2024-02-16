@@ -1,6 +1,6 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable,
-  CreateDateColumn, UpdateDateColumn, OneToMany, Relation,
+  CreateDateColumn, UpdateDateColumn, OneToMany,
 } from 'typeorm';
 import Tag from './Tag';
 import Comment from './Comment';
@@ -20,13 +20,12 @@ export default class Blog {
   @Column('int', { default: BlogType.COMMON })
   blogType: BlogType;
 
-  @ManyToMany(() => Tag)
+  @ManyToMany('Tag')
   @JoinTable()
-  tags: Relation<Tag>[];
+  tags: Tag[];
 
-  // @OneToMany('Comment', 'blog')
-  @OneToMany(() => Comment, (comment) => comment.blog)
-  comments: Relation<Comment>[];
+  @OneToMany('Comment', 'blog')
+  comments: Comment[];
 
   @CreateDateColumn()
   createAt: string;

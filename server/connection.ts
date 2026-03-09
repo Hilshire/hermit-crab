@@ -3,14 +3,6 @@ import {
   Blog, Tag, Comment,
 } from './entity';
 
-const {
-  DATABASE_HOST: host = 'localhost',
-  DATABASE_PORT: port = '3306',
-  DATABASE_USERNAME: username = 'root',
-  DATABASE_PASSWORD: password = '',
-  DATABASE_NAME: database = 'blog',
-} = process.env;
-
 let appDataSource: Promise<DataSource> | null = null;
 export function prepareConnection() {
   if (!appDataSource) {
@@ -29,21 +21,16 @@ export function prepareConnection() {
 }
 
 function getOption(): DataSourceOptions {
-  const portNum = parseInt(port, 10);
-  if (isNaN(portNum)) {
-    throw new Error('error port');
-  }
   return {
-    type: 'mysql',
-    host,
-    port: portNum,
-    username,
-    password,
-    database,
-    synchronize: true,
-    migrations: ['migration/*.js'],
-    extra: {
-      charset: 'utf8mb4_unicode_ci',
+    type: "postgres",
+    url: process.env.NEON_DATABASE_URL,
+    synchronize: false,
+    ssl: {
+      rejectUnauthorized: false
     },
+    extra: {
+      max: 10
+    },
+    logging: ["error"],
   };
 }

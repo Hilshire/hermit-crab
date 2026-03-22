@@ -12,7 +12,7 @@ const createBlog = async (req: NextApiRequest, res: NextApiResponse) => {
       const blog = new Blog();
       blog.title = title;
       blog.context = context;
-      blog.blogType = blogType;
+      blog.blogType = Number(blogType);
 
       try {
         await repo.save(blog);

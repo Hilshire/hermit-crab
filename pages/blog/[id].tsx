@@ -81,8 +81,12 @@ export async function getStaticProps({ params }) {
   if (!id) {
     return { notFound: true };
   }
+  const blogId = Number(id);
+  if (!Number.isInteger(blogId)) {
+    return { notFound: true };
+  }
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOneBy({ id: params.id });
+  const blog = await repo.findOneBy({ id: blogId });
   if (!blog) {
     return { notFound: true };
   }

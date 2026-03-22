@@ -38,11 +38,13 @@ const Blog: FunctionComponent<Props> = ({ blogJson }) => {
                 <Select
                   labelId="Blog Type"
                   value={blogType}
-                  onChange={(e) => setBlogType(e.target.value as BlogType)}
+                  onChange={(e) => setBlogType(Number(e.target.value) as BlogType)}
                 >
                   {
-                    Object.keys(blogTextMap)
-                      .map((key) => <MenuItem key={key} value={key}>{blogTextMap[key]}</MenuItem>)
+                    Object.entries(blogTextMap)
+                      .map(([key, text]) => (
+                        <MenuItem key={key} value={Number(key)}>{text}</MenuItem>
+                      ))
                   }
                 </Select>
               )}
@@ -88,8 +90,9 @@ ${type === 'preview' ? data.context : context}
 };
 
 export async function getServerSideProps({ params, req, res }) {
+  const blogId = Number(params.id);
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOneBy({ id: params.id });
+  const blog = Number.isInteger(blogId) ? await repo.findOneBy({ id: blogId }) : null;
   jwt(() => { })(req, res);
 
   return {

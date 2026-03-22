@@ -5,8 +5,11 @@ import { jwt } from '@middleware';
 
 const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
   const repo = await getRepo(Blog);
-  const { id } = req.query;
-  if (!id) res.status(500).json({ code: 0, message: 'need id' });
+  const rawId = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+  const id = Number(rawId);
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ code: 0, message: 'invalid id' });
+  }
   switch (req.method) {
     case 'DELETE':
       try {
@@ -20,7 +23,7 @@ const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'PUT':
     {
       const { title, context, blogType } = req.body;
-      await repo.update(id, { title, context, blogType });
+      await repo.update(id, { title, context, blogType: Number(blogType) });
       res.status(200).json({ code: 1 });
       break;
     }

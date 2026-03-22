@@ -34,11 +34,11 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
             <Select
               labelId="Blog Type"
               value={blogType}
-              onChange={(e) => setBlogType(e.target.value as BlogType)}
+              onChange={(e) => setBlogType(Number(e.target.value) as BlogType)}
             >
               {
-                Object.keys(blogTextMap)
-                  .map((key) => <MenuItem key={key} value={key}>{blogTextMap[key]}</MenuItem>)
+                Object.entries(blogTextMap)
+                  .map(([key, text]) => <MenuItem key={key} value={Number(key)}>{text}</MenuItem>)
               }
             </Select>
           </FormControl>

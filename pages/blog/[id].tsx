@@ -79,16 +79,25 @@ export function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const { id } = params;
   if (!id) {
-    return { notFound: true };
+    return {
+      notFound: true,
+      revalidate: 60 * 5,
+    };
   }
   const blogId = Number(id);
   if (!Number.isInteger(blogId)) {
-    return { notFound: true };
+    return {
+      notFound: true,
+      revalidate: 60 * 5,
+    };
   }
   const repo = await getRepo<BlogEntity>(BlogEntity);
   const blog = await repo.findOneBy({ id: blogId });
   if (!blog) {
-    return { notFound: true };
+    return {
+      notFound: true,
+      revalidate: 60 * 5,
+    };
   }
 
   return {

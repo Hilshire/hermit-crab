@@ -4,7 +4,7 @@ hilshire 的[博客](https://www.hilshire.cyou/)。
 
 ## 配置
 
-使用环境变量进行配置，也可以使用 .env.local 写死
+使用环境变量进行配置。可将 `.env.example` 复制为 `.env.local` 并填写实际值；不要提交 `.env.local`。
 
 配置列表：
 ```yml
@@ -23,6 +23,8 @@ NEXT_PUBLIC_GITHUB_CLIENT_SECRET
 NEXT_PUBLIC_GITHUB_REPO
 NEXT_PUBLIC_GITHUB_OWNER
 ```
+
+认证相关变量不能为空。生产环境还要求所有 `DATABASE_*` 变量均已配置；开发环境仅为本地调试保留默认的 MySQL 连接参数。
 
 ## 数据库迁移
 

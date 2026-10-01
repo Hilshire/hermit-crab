@@ -2,17 +2,20 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { sign } from 'jsonwebtoken';
 import { compareSync } from 'bcryptjs';
 import { serialize } from 'cookie';
+import { getClaimHash, getJwtSecret } from '@server/config';
 
 const login = async (req: NextApiRequest, res: NextApiResponse) => {
   const { claim } = req.body;
+  const claimHash = getClaimHash();
+  const secretKey = getJwtSecret();
 
   try {
-    if (compareSync(claim, process.env.CLAIM)) {
+    if (compareSync(claim, claimHash)) {
       const jwt = sign(
         {
           exp: Math.floor(Date.now() / 1000) + (60 * 60),
         },
-        process.env.SECRET_KEY,
+        secretKey,
       );
 
       res.setHeader('Set-Cookie', serialize('token', jwt, {

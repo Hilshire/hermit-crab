@@ -2,14 +2,7 @@ import { DataSourceOptions, DataSource } from 'typeorm';
 import {
   Blog, Tag, Comment,
 } from './entity';
-
-const {
-  DATABASE_HOST: host = 'localhost',
-  DATABASE_PORT: port = '3306',
-  DATABASE_USERNAME: username = 'root',
-  DATABASE_PASSWORD: password = '',
-  DATABASE_NAME: database = 'blog',
-} = process.env;
+import { getDatabaseConfig } from './config';
 
 let appDataSource: Promise<DataSource> | null = null;
 export function prepareConnection() {
@@ -29,6 +22,9 @@ export function prepareConnection() {
 }
 
 function getOption(): DataSourceOptions {
+  const {
+    host, port, username, password, database,
+  } = getDatabaseConfig();
   const portNum = parseInt(port, 10);
   if (isNaN(portNum)) {
     throw new Error('error port');

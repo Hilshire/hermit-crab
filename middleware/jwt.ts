@@ -1,12 +1,15 @@
 import { verify } from 'jsonwebtoken';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { getJwtSecret } from '@server/config';
 
 export function isAuthenticated(req: Pick<NextApiRequest, 'cookies'>) {
   const { token } = req.cookies;
-  if (!token || !process.env.SECRET_KEY) return false;
+  if (!token) return false;
+
+  const secretKey = getJwtSecret();
 
   try {
-    verify(token, process.env.SECRET_KEY);
+    verify(token, secretKey);
     return true;
   } catch (e) {
     return false;

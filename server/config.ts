@@ -34,9 +34,19 @@ export function getClaimHash() {
 
 export function getDatabaseConfig(): DatabaseConfig {
   const isProduction = process.env.NODE_ENV === 'production';
-  const type = process.env.DATABASE_TYPE || 'sqlite';
+  const isVercel = process.env.VERCEL === '1';
+  const configuredType = process.env.DATABASE_TYPE;
+
+  if (isVercel && !configuredType) {
+    throw new Error('Vercel deployments require DATABASE_TYPE=mysql and an external database');
+  }
+
+  const type = configuredType || 'sqlite';
 
   if (type === 'sqlite') {
+    if (isVercel) {
+      throw new Error('SQLite is not supported on Vercel because its filesystem is not persistent; configure MySQL');
+    }
     return {
       type,
       database: process.env.DATABASE_PATH || 'db/hermit-crab.sqlite',

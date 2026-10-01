@@ -1,5 +1,5 @@
 import { mkdir } from 'fs/promises';
-import { dirname } from 'path';
+import { dirname, isAbsolute, resolve } from 'path';
 import { DataSourceOptions, DataSource } from 'typeorm';
 import {
   Blog, Tag, Comment,
@@ -32,10 +32,13 @@ export function getDataSourceOptions(): DataSourceOptions {
   };
 
   if (config.type === 'sqlite') {
+    const database = config.database === ':memory:' || isAbsolute(config.database)
+      ? config.database
+      : resolve(process.cwd(), config.database);
     return {
       ...common,
       type: 'sqlite',
-      database: config.database,
+      database,
       migrations: [InitialSqliteSchema1700000000000],
       migrationsRun: process.env.NODE_ENV === 'production',
     };

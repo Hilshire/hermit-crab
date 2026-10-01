@@ -28,6 +28,8 @@ NEXT_PUBLIC_GITHUB_OWNER
 
 开发环境未配置 `SECRET_KEY` 和 `CLAIM` 时，可使用默认管理员密码 `dev-password` 登录；这两个默认值仅在 `NODE_ENV=development` 生效，生产和测试环境仍要求显式配置。开发与生产环境默认使用 SQLite，数据库文件为 `db/hermit-crab.sqlite`；SQLite 适用于单实例且磁盘持久化的部署。设置 `DATABASE_TYPE=mysql` 后，生产环境要求所有 MySQL 的 `DATABASE_*` 变量均已配置；开发环境则保留本地 MySQL 默认连接参数。
 
+Vercel Preview/Production 不支持默认 SQLite：Vercel Function 的文件系统不是持久化数据库磁盘。Vercel 项目必须在对应环境配置 `DATABASE_TYPE=mysql` 以及 `DATABASE_HOST`、`DATABASE_PORT`、`DATABASE_USERNAME`、`DATABASE_PASSWORD`、`DATABASE_NAME`。
+
 ## 数据库迁移
 
 开发环境会自动同步实体结构。生产环境已禁用自动同步；使用默认 SQLite 时，应用启动会执行已登记的 migration。所有后续表结构变更必须先通过 TypeORM migration 审核；不要依赖应用启动时的自动同步。

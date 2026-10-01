@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Blog } from '@server/entity';
+import { Blog, Tag } from '@server/entity';
 import { getRepo } from '@utils';
 import { jwt } from '@middleware';
 import { parseBlogInput, parseEntityId } from '@server/validation';
@@ -35,10 +35,20 @@ const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
 
       try {
         const repo = await getRepo(Blog);
-        const result = await repo.update(id, input);
-        if (!result.affected) {
+        const tagRepo = await getRepo(Tag);
+        const tags = input.tagIds.length ? await tagRepo.findByIds(input.tagIds) : [];
+        if (tags.length !== input.tagIds.length) {
+          return res.status(400).json({ code: 0, message: 'invalid tags' });
+        }
+        const blog = await repo.findOneBy({ id });
+        if (!blog) {
           return res.status(404).json({ code: 0, message: 'blog not found' });
         }
+        blog.title = input.title;
+        blog.context = input.context;
+        blog.blogType = input.blogType;
+        blog.tags = tags;
+        await repo.save(blog);
         const revalidated = await revalidateBlogPage(res, id);
         res.status(200).json({ code: 1, revalidated });
       } catch (e) {

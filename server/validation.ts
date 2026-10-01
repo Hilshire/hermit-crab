@@ -4,6 +4,7 @@ interface BlogInput {
   title: string;
   context: string;
   blogType: BlogType;
+  tagIds: number[];
 }
 
 interface TagInput {
@@ -28,7 +29,9 @@ export function isValidClaim(value: unknown) {
 export function parseBlogInput(value: unknown): BlogInput | null {
   if (!isRecord(value)) return null;
 
-  const { title, context, blogType } = value;
+  const {
+    title, context, blogType, tagIds,
+  } = value;
   const validBlogTypes = [
     BlogType.COMMON,
     BlogType.ESSAY,
@@ -39,7 +42,10 @@ export function parseBlogInput(value: unknown): BlogInput | null {
   if (!isNonEmptyString(title, 100)
     || !isNonEmptyString(context)
     || typeof blogType !== 'number'
-    || !validBlogTypes.includes(blogType)) {
+    || !validBlogTypes.includes(blogType)
+    || (tagIds !== undefined && (!Array.isArray(tagIds)
+      || !tagIds.every((id) => Number.isSafeInteger(id) && id > 0)
+      || new Set(tagIds).size !== tagIds.length))) {
     return null;
   }
 
@@ -47,6 +53,7 @@ export function parseBlogInput(value: unknown): BlogInput | null {
     title: title.trim(),
     context,
     blogType,
+    tagIds: tagIds || [],
   };
 }
 

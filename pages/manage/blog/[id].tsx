@@ -4,23 +4,25 @@ import Markdown from 'react-markdown';
 import {
   FormControl, TextField, Button, Select, MenuItem,
 } from '@material-ui/core';
-import { Blog as BlogEntity } from '@server/entity';
+import { Blog as BlogEntity, Tag as TagEntity } from '@server/entity';
 import axios from 'axios';
 import { useSnackbar } from '@hooks';
 import { getRepo } from '@utils';
 import { getLoginRedirect, isAuthenticated } from '@middleware';
 import { blogTextMap, BlogType } from '@server/entity/type';
-import type { BlogDetail } from '@server/dto';
+import type { BlogDetail, TagDto } from '@server/dto';
 
 interface Props {
   blog: BlogDetail;
+  tags: TagDto[];
 }
 type DetailType = 'edit' | 'preview';
-const Blog: FunctionComponent<Props> = ({ blog: data }) => {
+const Blog: FunctionComponent<Props> = ({ blog: data, tags }) => {
   const [type, setType] = useState<DetailType>('preview');
   const [blogType, setBlogType] = useState<BlogType>(data.blogType);
   const [title, setTitle] = useState(data.title);
   const [context, setContext] = useState(data.context);
+  const [tagIds, setTagIds] = useState<number[]>(data.tags.map((tag) => tag.id));
   const { setSnackbar, Snackbar } = useSnackbar();
 
   return (
@@ -62,6 +64,26 @@ const Blog: FunctionComponent<Props> = ({ blog: data }) => {
                   )
               }
             </FormControl>
+            <FormControl fullWidth>
+              {type === 'preview' ? (
+                <div>{data.tags.map((tag) => tag.name).join(', ') || 'No tags'}</div>
+              ) : (
+                <Select
+                  multiple
+                  value={tagIds}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    setTagIds(typeof value === 'string' ? value.split(',').map(Number) : value as number[]);
+                  }}
+                  renderValue={(selected) => {
+                    const selectedTagIds = selected as number[];
+                    return tags.filter((tag) => selectedTagIds.includes(tag.id)).map((tag) => tag.name).join(', ');
+                  }}
+                >
+                  {tags.map((tag) => <MenuItem key={tag.id} value={tag.id}>{tag.name}</MenuItem>)}
+                </Select>
+              )}
+            </FormControl>
           </form>
         </div>
         <div className="preview-section">
@@ -78,7 +100,9 @@ ${type === 'preview' ? data.context : context}
   );
 
   function handleSubmit() {
-    axios.put(`/api/blog/${data.id}`, { title, context, blogType })
+    axios.put(`/api/blog/${data.id}`, {
+      title, context, blogType, tagIds,
+    })
       .then((res) => {
         if (res.data.code) {
           setSnackbar(true, 'ok', 'success', location.reload.bind(location));
@@ -103,11 +127,16 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
 
   const blogId = Number(params?.id);
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = Number.isInteger(blogId) ? await repo.findOneBy({ id: blogId }) : null;
+  const blog = Number.isInteger(blogId)
+    ? await repo.findOne({ where: { id: blogId }, relations: { tags: true } })
+    : null;
 
   if (!blog) {
     return { notFound: true };
   }
+
+  const tagRepo = await getRepo<TagEntity>(TagEntity);
+  const tags = await tagRepo.find();
 
   return {
     props: {
@@ -118,7 +147,9 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
         blogType: blog.blogType,
         createAt: blog.createAt,
         lastUpdateAt: blog.lastUpdateAt,
+        tags: blog.tags.map(({ id, name, color }) => ({ id, name, color })),
       },
+      tags: tags.map(({ id, name, color }) => ({ id, name, color })),
     },
   };
 };

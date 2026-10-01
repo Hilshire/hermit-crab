@@ -6,6 +6,15 @@ import { Tag } from '../../../server/entity';
 
 const createTag = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
+    case 'GET':
+      try {
+        const repo = await getRepo(Tag);
+        const tags = await repo.find();
+        return res.status(200).json({ code: 1, tags });
+      } catch (e) {
+        console.error(e);
+        return res.status(500).json({ code: 0, message: '服务异常' });
+      }
     case 'PUT':
     {
       const input = parseTagInput(req.body);
@@ -13,14 +22,13 @@ const createTag = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({ code: 0, message: 'invalid request' });
       }
 
-      const repo = await getRepo(Tag);
-      const tag = new Tag();
-      tag.name = input.name;
-      tag.color = input.color;
-
       try {
+        const repo = await getRepo(Tag);
+        const tag = new Tag();
+        tag.name = input.name;
+        tag.color = input.color;
         await repo.save(tag);
-        res.status(200).json({ code: 1 });
+        res.status(200).json({ code: 1, tag });
       } catch (e) {
         console.error(e);
         res.status(500).json({ code: 0, message: '服务异常' });
@@ -28,7 +36,7 @@ const createTag = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
     }
     default:
-      res.setHeader('Allow', 'PUT');
+      res.setHeader('Allow', 'GET, PUT');
       return res.status(405).json({ code: 0, message: 'method not allowed' });
   }
 };

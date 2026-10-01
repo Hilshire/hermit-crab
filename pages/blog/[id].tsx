@@ -46,7 +46,7 @@ export function Blog({ blog }: Props) {
 
   const data = blog;
   const {
-    title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt,
+    title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt, tags,
   } = data;
 
   return (
@@ -60,6 +60,7 @@ export function Blog({ blog }: Props) {
             {' | 最后更新：'}
             {moment(lastUpdateAt).format('YYYY-MM-DD')}
           </p>
+          {tags.length > 0 && <p>{tags.map((tag) => tag.name).join(', ')}</p>}
         </div>
         <div className="right">
           <Image
@@ -99,7 +100,7 @@ export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({ pa
     };
   }
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOneBy({ id: blogId });
+  const blog = await repo.findOne({ where: { id: blogId }, relations: { tags: true } });
   if (!blog) {
     return {
       notFound: true,
@@ -116,6 +117,7 @@ export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({ pa
         blogType: blog.blogType,
         createAt: blog.createAt,
         lastUpdateAt: blog.lastUpdateAt,
+        tags: blog.tags.map(({ id: tagId, name, color }) => ({ id: tagId, name, color })),
       },
     },
     revalidate: 60 * 60 * 24,

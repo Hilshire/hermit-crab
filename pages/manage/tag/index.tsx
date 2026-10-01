@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import { useSnackbar } from '@hooks';
-import { jwt } from '@middleware';
+import { getLoginRedirect, isAuthenticated } from '@middleware';
 
 interface Props {
   tagsJson: string;
@@ -100,11 +100,18 @@ const Tags: FunctionComponent<Props> = ({ tagsJson }) => {
   }
 };
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req }) {
+  if (!isAuthenticated(req)) {
+    return {
+      redirect: {
+        destination: getLoginRedirect(req),
+        permanent: false,
+      },
+    };
+  }
+
   const repo = await getRepo<TagEntity>(TagEntity);
   const tags = await repo.find();
-
-  jwt()(req, res);
 
   return {
     props: {

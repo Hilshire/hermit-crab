@@ -1,3 +1,1 @@
-import jwt from './jwt';
-
-export { jwt };
+export { default as jwt, getLoginRedirect, isAuthenticated } from './jwt';

@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import { useSnackbar, useAlert } from '@hooks';
 import { DataTable } from '@components';
-import { jwt } from '@middleware';
+import { getLoginRedirect, isAuthenticated } from '@middleware';
 import { BlogType, blogTextMap } from '@server/entity/type';
 
 interface Props {
@@ -109,11 +109,18 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
   }
 };
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req }) {
+  if (!isAuthenticated(req)) {
+    return {
+      redirect: {
+        destination: getLoginRedirect(req),
+        permanent: false,
+      },
+    };
+  }
+
   const repo = await getRepo<BlogEntity>(BlogEntity);
   const blogs = await repo.find({ order: { id: 'DESC' } });
-
-  jwt()(req, res);
 
   return {
     props: {

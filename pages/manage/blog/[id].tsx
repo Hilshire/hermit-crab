@@ -7,7 +7,7 @@ import { Blog as BlogEntity } from '@server/entity';
 import axios from 'axios';
 import { useSnackbar } from '@hooks';
 import { getRepo } from '@utils';
-import { jwt } from '@middleware';
+import { getLoginRedirect, isAuthenticated } from '@middleware';
 import { blogTextMap, BlogType } from '@server/entity/type';
 
 interface Props {
@@ -89,11 +89,23 @@ ${type === 'preview' ? data.context : context}
   }
 };
 
-export async function getServerSideProps({ params, req, res }) {
+export async function getServerSideProps({ params, req }) {
+  if (!isAuthenticated(req)) {
+    return {
+      redirect: {
+        destination: getLoginRedirect(req),
+        permanent: false,
+      },
+    };
+  }
+
   const blogId = Number(params.id);
   const repo = await getRepo<BlogEntity>(BlogEntity);
   const blog = Number.isInteger(blogId) ? await repo.findOneBy({ id: blogId }) : null;
-  jwt(() => { })(req, res);
+
+  if (!blog) {
+    return { notFound: true };
+  }
 
   return {
     props: {

@@ -8,6 +8,38 @@
         }
     }
 
+    .manage-navigation {
+        display: flex;
+        gap: 0.5rem;
+        padding-top: 1rem;
+    }
+
+    .manage-card {
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+    }
+
+    h1, h2 {
+        margin-top: 0;
+    }
+
+    .manage-form, .tag-add-form, .tag-item {
+        display: grid;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .tag-add-form {
+        grid-template-columns: minmax(0, 1fr) minmax(16rem, 1fr) auto;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
     // tag
     .tag-color {
         width: 1.2rem;
@@ -15,8 +47,49 @@
         border-radius: 2px;
     }
     .tag-item {
+        grid-template-columns: minmax(0, 1fr) minmax(16rem, 1fr) auto;
+        padding: 1rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .tag-color-picker {
         display: flex;
-        gap: 12px;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .tag-color-palette {
+        display: flex;
+        gap: 0.35rem;
+    }
+
+    .tag-color-swatch {
+        width: 1.5rem;
+        height: 1.5rem;
+        padding: 0;
+        border: 2px solid transparent;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &.selected {
+            border-color: white;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+        }
+    }
+
+    .blog-tag {
+        display: inline-block;
+        margin: 0.15rem 0.25rem 0.15rem 0;
+        padding: 0.15rem 0.45rem;
+        border-radius: 999px;
+        color: #111;
+        font-size: 0.8rem;
+    }
+
+    @media (max-width: 600px) {
+        .tag-add-form, .tag-item {
+            grid-template-columns: 1fr;
+        }
     }
 }
-

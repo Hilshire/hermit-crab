@@ -3,12 +3,12 @@ import { BlogType } from '@server/entity/type';
 import { getRepo } from '@utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Footer } from '@components';
 import type { GetServerSideProps } from 'next';
-import type { BlogSummary } from '@server/dto';
+import type { PublicBlogSummary } from '@server/dto';
+import { Footer } from '../components/Footer';
 
 interface Props {
-  list: BlogSummary[];
+  list: PublicBlogSummary[];
   count: number;
 }
 
@@ -24,6 +24,13 @@ export default function Home({ list: blogList, count }: Props) {
         {blogList.map((b) => (
           <div className="blog-list-item" key={b.id}>
             <Link href={`/blog/${b.id}`}>{b.title}</Link>
+            {b.tags.length > 0 && (
+              <sup className="blog-list-tags" aria-label="文章标签">
+                {b.tags.map((tag) => (
+                  <Link href={`/tag/${tag.id}`} key={tag.id} passHref><span>{tag.name}</span></Link>
+                ))}
+              </sup>
+            )}
           </div>
         ))}
         <div className="pagination">
@@ -49,7 +56,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
   const blogBuilder = repo
     .createQueryBuilder('blog')
     .leftJoinAndSelect('blog.tags', 'tag')
-    .select(['blog.title', 'blog.createAt', 'blog.lastUpdateAt', 'blog.id', 'blog.blogType', 'tag.name'])
+    .select(['blog.title', 'blog.createAt', 'blog.lastUpdateAt', 'blog.id', 'blog.blogType', 'tag.id', 'tag.name'])
     .where('blog.blogType IN (:...types)', { types: type.split('') });
 
   const blog = await blogBuilder
@@ -61,7 +68,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
 
   return {
     props: {
-      list: blog.map(({ id, title, blogType }) => ({ id, title, blogType })),
+      list: blog.map(({
+        id, title, blogType, tags,
+      }) => ({
+        id,
+        title,
+        blogType,
+        tags: tags.map(({ id: tagId, name }) => ({ id: tagId, name })),
+      })),
       count,
     },
   };

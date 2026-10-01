@@ -29,6 +29,7 @@
     "react-dom": "^18.0.2",
     "react-markdown": "^6.0.2",
     "react-syntax-highlighter": "^15.4.3",
+    "sqlite3": "5.1.7",
     "typeorm": "^0.3.19"
   },
   "devDependencies": {

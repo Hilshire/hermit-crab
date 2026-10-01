@@ -9,9 +9,10 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { CodeComponent, NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 import { DEFAULT_APP_TITLE } from '@const';
-import { UtterancesComments } from '@components';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import type { BlogDetail } from '@server/dto';
+import { serializeDate } from '@server/dto';
+import type { BlogDetail, TagDto } from '@server/dto';
+import { UtterancesComments } from '../../components/UtterancesComments';
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   // @ts-ignore
@@ -46,7 +47,7 @@ export function Blog({ blog }: Props) {
 
   const data = blog;
   const {
-    title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt, tags,
+    title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt,
   } = data;
 
   return (
@@ -60,7 +61,6 @@ export function Blog({ blog }: Props) {
             {' | 最后更新：'}
             {moment(lastUpdateAt).format('YYYY-MM-DD')}
           </p>
-          {tags.length > 0 && <p>{tags.map((tag) => tag.name).join(', ')}</p>}
         </div>
         <div className="right">
           <Image
@@ -115,9 +115,13 @@ export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({ pa
         title: blog.title,
         context: blog.context,
         blogType: blog.blogType,
-        createAt: blog.createAt,
-        lastUpdateAt: blog.lastUpdateAt,
-        tags: blog.tags.map(({ id: tagId, name, color }) => ({ id: tagId, name, color })),
+        createAt: serializeDate(blog.createAt),
+        lastUpdateAt: serializeDate(blog.lastUpdateAt),
+        tags: blog.tags.map((tag: TagDto) => ({
+          id: tag.id,
+          name: tag.name,
+          color: tag.color,
+        })),
       },
     },
     revalidate: 60 * 60 * 24,

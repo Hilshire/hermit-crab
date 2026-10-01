@@ -1,18 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getRepo } from '@utils';
 import { jwt } from '@middleware';
+import { parseBlogInput } from '@server/validation';
 import { Blog } from '../../../server/entity';
 
 const createBlog = async (req: NextApiRequest, res: NextApiResponse) => {
-  const repo = await getRepo(Blog);
   switch (req.method) {
     case 'PUT':
     {
-      const { title, context, blogType } = req.body || {};
+      const input = parseBlogInput(req.body);
+      if (!input) {
+        return res.status(400).json({ code: 0, message: 'invalid request' });
+      }
+
+      const repo = await getRepo(Blog);
       const blog = new Blog();
-      blog.title = title;
-      blog.context = context;
-      blog.blogType = Number(blogType);
+      blog.title = input.title;
+      blog.context = input.context;
+      blog.blogType = input.blogType;
 
       try {
         await repo.save(blog);
@@ -24,7 +29,8 @@ const createBlog = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
     }
     default:
-      res.status(405).json({ code: 0 });
+      res.setHeader('Allow', 'PUT');
+      return res.status(405).json({ code: 0, message: 'method not allowed' });
   }
 };
 

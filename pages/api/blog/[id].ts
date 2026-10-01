@@ -2,18 +2,22 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Blog } from '@server/entity';
 import { getRepo } from '@utils';
 import { jwt } from '@middleware';
+import { parseBlogInput, parseEntityId } from '@server/validation';
 
 const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
-  const repo = await getRepo(Blog);
-  const rawId = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
-  const id = Number(rawId);
-  if (!Number.isInteger(id)) {
+  const id = parseEntityId(req.query.id);
+  if (!id) {
     return res.status(400).json({ code: 0, message: 'invalid id' });
   }
+
   switch (req.method) {
     case 'DELETE':
       try {
-        await repo.delete(id);
+        const repo = await getRepo(Blog);
+        const result = await repo.delete(id);
+        if (!result.affected) {
+          return res.status(404).json({ code: 0, message: 'blog not found' });
+        }
         res.status(200).json({ code: 1 });
       } catch (e) {
         console.error(e);
@@ -22,13 +26,27 @@ const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
     case 'PUT':
     {
-      const { title, context, blogType } = req.body;
-      await repo.update(id, { title, context, blogType: Number(blogType) });
-      res.status(200).json({ code: 1 });
+      const input = parseBlogInput(req.body);
+      if (!input) {
+        return res.status(400).json({ code: 0, message: 'invalid request' });
+      }
+
+      try {
+        const repo = await getRepo(Blog);
+        const result = await repo.update(id, input);
+        if (!result.affected) {
+          return res.status(404).json({ code: 0, message: 'blog not found' });
+        }
+        res.status(200).json({ code: 1 });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ code: 0, message: '服务异常' });
+      }
       break;
     }
     default:
-      res.status(405).json({ code: 0 });
+      res.setHeader('Allow', 'DELETE, PUT');
+      return res.status(405).json({ code: 0, message: 'method not allowed' });
   }
 };
 

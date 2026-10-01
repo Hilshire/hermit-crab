@@ -24,6 +24,10 @@ NEXT_PUBLIC_GITHUB_REPO
 NEXT_PUBLIC_GITHUB_OWNER
 ```
 
+## 数据库迁移
+
+开发环境会自动同步实体结构。生产环境已禁用自动同步，所有表结构变更必须先通过 TypeORM migration 审核并执行；不要依赖应用启动时修改生产数据库。
+
 
 ## 计划
 

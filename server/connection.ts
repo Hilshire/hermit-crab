@@ -40,7 +40,7 @@ function getOption(): DataSourceOptions {
     username,
     password,
     database,
-    synchronize: true,
+    synchronize: process.env.NODE_ENV !== 'production',
     migrations: ['migration/*.js'],
     extra: {
       charset: 'utf8mb4_unicode_ci',

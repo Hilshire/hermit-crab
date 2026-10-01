@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import {
   Button, Dialog, DialogActions, DialogContent,
 } from '@material-ui/core';
 
-export function useAlert(onOk, onClose = () => { }) {
+export function useAlert(onOk: () => void, onClose: () => void = () => { }) {
   const [visible, setVisible] = useState<boolean>(false);
   const [handleClose, setHandleClose] = useState<() => () => void>(() => onClose);
   // useState 如果传的是 function 会调用一次h，用来获得初始 state。所以这里再包一层
@@ -14,7 +14,7 @@ export function useAlert(onOk, onClose = () => { }) {
     setVisible,
     setHandleClose,
     setHandleOk,
-    Alert: ({ children }) => (
+    Alert: ({ children }: PropsWithChildren<unknown>) => (
       <Dialog open={visible} onClose={handleClose}>
         <DialogContent>
           {children}

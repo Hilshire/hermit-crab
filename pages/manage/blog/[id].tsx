@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from 'react';
+import type { GetServerSideProps } from 'next';
 import Markdown from 'react-markdown';
 import {
   FormControl, TextField, Button, Select, MenuItem,
@@ -9,14 +10,13 @@ import { useSnackbar } from '@hooks';
 import { getRepo } from '@utils';
 import { getLoginRedirect, isAuthenticated } from '@middleware';
 import { blogTextMap, BlogType } from '@server/entity/type';
+import type { BlogDetail } from '@server/dto';
 
 interface Props {
-  blogJson: string;
+  blog: BlogDetail;
 }
 type DetailType = 'edit' | 'preview';
-const Blog: FunctionComponent<Props> = ({ blogJson }) => {
-  const data: BlogEntity = JSON.parse(blogJson);
-
+const Blog: FunctionComponent<Props> = ({ blog: data }) => {
   const [type, setType] = useState<DetailType>('preview');
   const [blogType, setBlogType] = useState<BlogType>(data.blogType);
   const [title, setTitle] = useState(data.title);
@@ -89,7 +89,9 @@ ${type === 'preview' ? data.context : context}
   }
 };
 
-export async function getServerSideProps({ params, req }) {
+export const getServerSideProps: GetServerSideProps<Props, { id: string }> = async (
+  { params, req },
+) => {
   if (!isAuthenticated(req)) {
     return {
       redirect: {
@@ -99,7 +101,7 @@ export async function getServerSideProps({ params, req }) {
     };
   }
 
-  const blogId = Number(params.id);
+  const blogId = Number(params?.id);
   const repo = await getRepo<BlogEntity>(BlogEntity);
   const blog = Number.isInteger(blogId) ? await repo.findOneBy({ id: blogId }) : null;
 
@@ -109,9 +111,16 @@ export async function getServerSideProps({ params, req }) {
 
   return {
     props: {
-      blogJson: JSON.stringify(blog),
+      blog: {
+        id: blog.id,
+        title: blog.title,
+        context: blog.context,
+        blogType: blog.blogType,
+        createAt: blog.createAt,
+        lastUpdateAt: blog.lastUpdateAt,
+      },
     },
   };
-}
+};
 
 export default Blog;

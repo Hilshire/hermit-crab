@@ -1,4 +1,5 @@
 import { FunctionComponent, useState, useEffect } from 'react';
+import type { GetServerSideProps } from 'next';
 import { Tag as TagEntity } from '@server/entity';
 import { getRepo } from '@utils';
 import {
@@ -7,21 +8,21 @@ import {
 import axios from 'axios';
 import { useSnackbar } from '@hooks';
 import { getLoginRedirect, isAuthenticated } from '@middleware';
+import type { TagDto } from '@server/dto';
 
 interface Props {
-  tagsJson: string;
+  tags: TagDto[];
 }
 
 const getRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
 
-const Tags: FunctionComponent<Props> = ({ tagsJson }) => {
+const Tags: FunctionComponent<Props> = ({ tags }) => {
   const [name, setName] = useState('');
   const [color, setColor] = useState('');
   const [inputColor, setInputColor] = useState('');
   const { setSnackbar, Snackbar } = useSnackbar();
 
-  const tags: TagEntity[] = JSON.parse(tagsJson);
-  const colorLabel = (color) => <div className="tag-color" style={{ background: `${color}` }} />;
+  const colorLabel = (color: string) => <div className="tag-color" style={{ background: color }} />;
   const refreshColor = () => {
     const color = getRandomColor();
     setColor(color);
@@ -32,17 +33,17 @@ const Tags: FunctionComponent<Props> = ({ tagsJson }) => {
     refreshColor();
   }, []);
 
-  function isValidColor(color) {
+  function isValidColor(color: string) {
     const s = new Option().style;
     s.color = color;
     return s.color !== '';
   }
 
-  function safeSetColor(color) {
+  function safeSetColor(color: string) {
     if (isValidColor(color)) setColor(color);
   }
 
-  function handleInputColor(v) {
+  function handleInputColor(v: string) {
     setInputColor(v);
     safeSetColor(v);
   }
@@ -100,7 +101,7 @@ const Tags: FunctionComponent<Props> = ({ tagsJson }) => {
   }
 };
 
-export async function getServerSideProps({ req }) {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => {
   if (!isAuthenticated(req)) {
     return {
       redirect: {
@@ -115,9 +116,9 @@ export async function getServerSideProps({ req }) {
 
   return {
     props: {
-      tagsJson: JSON.stringify(tags),
+      tags: tags.map(({ id, name, color }) => ({ id, name, color })),
     },
   };
-}
+};
 
 export default Tags;

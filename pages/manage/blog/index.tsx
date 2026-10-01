@@ -1,4 +1,5 @@
 import { FunctionComponent, useState, useRef } from 'react';
+import type { GetServerSideProps } from 'next';
 import { getRepo } from '@utils';
 import { Blog as BlogEntity } from '@server/entity';
 import {
@@ -9,19 +10,18 @@ import { useSnackbar, useAlert } from '@hooks';
 import { DataTable } from '@components';
 import { getLoginRedirect, isAuthenticated } from '@middleware';
 import { BlogType, blogTextMap } from '@server/entity/type';
+import type { BlogSummary } from '@server/dto';
 
 interface Props {
-  blogsJson: string;
+  blogs: BlogSummary[];
 }
-const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
+const Blogs: FunctionComponent<Props> = ({ blogs }) => {
   const [title, setTitle] = useState('');
   const [blogType, setBlogType] = useState(BlogType.COMMON);
   const [context, setContext] = useState('');
-  const currentRow = useRef<BlogEntity | null>(null);
+  const currentRow = useRef<BlogSummary | null>(null);
   const { setSnackbar, Snackbar } = useSnackbar();
   const { setVisible: setAlertVisible, Alert } = useAlert(deleteBlog);
-
-  const blogs: BlogEntity[] = JSON.parse(blogsJson);
 
   return (
     <div className="manage">
@@ -88,10 +88,10 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
       });
   }
 
-  function detail(row) {
+  function detail(row: BlogSummary) {
     location.href = `/manage/blog/${row.id}`;
   }
-  function handleDeleteClick(row) {
+  function handleDeleteClick(row: BlogSummary) {
     setAlertVisible(true);
     currentRow.current = row;
   }
@@ -109,7 +109,7 @@ const Blogs: FunctionComponent<Props> = ({ blogsJson }) => {
   }
 };
 
-export async function getServerSideProps({ req }) {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => {
   if (!isAuthenticated(req)) {
     return {
       redirect: {
@@ -124,9 +124,9 @@ export async function getServerSideProps({ req }) {
 
   return {
     props: {
-      blogsJson: JSON.stringify(blogs),
+      blogs: blogs.map(({ id, title, blogType }) => ({ id, title, blogType })),
     },
   };
-}
+};
 
 export default Blogs;

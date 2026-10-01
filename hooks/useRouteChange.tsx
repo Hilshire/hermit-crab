@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-export function useRouteChange(startcb, endcb) {
+export function useRouteChange(startcb: () => void, endcb: () => void) {
   const router = useRouter();
 
   useEffect(() => {
@@ -12,5 +12,5 @@ export function useRouteChange(startcb, endcb) {
       router.events.off('routeChangeStart', startcb);
       router.events.off('routeChangeComplete', endcb);
     };
-  }, []);
+  }, [endcb, router.events, startcb]);
 }

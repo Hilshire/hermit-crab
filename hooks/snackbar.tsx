@@ -14,7 +14,9 @@ export function useSnackbar(type: Color = 'success') {
     setVisible,
     setSeverity,
     setContext,
-    setSnackbar: (visible?, context?, severity?: Color, cb = () => { }) => {
+    setSnackbar: (
+      visible?: boolean, context?: string, severity?: Color, cb: () => void = () => { },
+    ) => {
       visible && setVisible(visible);
       severity && setSeverity(severity);
       context && setContext(context);

@@ -3,6 +3,7 @@ import { Blog } from '@server/entity';
 import { getRepo } from '@utils';
 import { jwt } from '@middleware';
 import { parseBlogInput, parseEntityId } from '@server/validation';
+import { revalidateBlogPage } from '@server/blog-cache';
 
 const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = parseEntityId(req.query.id);
@@ -18,7 +19,8 @@ const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.affected) {
           return res.status(404).json({ code: 0, message: 'blog not found' });
         }
-        res.status(200).json({ code: 1 });
+        const revalidated = await revalidateBlogPage(res, id);
+        res.status(200).json({ code: 1, revalidated });
       } catch (e) {
         console.error(e);
         res.status(500).json({ code: 0, message: '服务异常' });
@@ -37,7 +39,8 @@ const deleteOrPutBlog = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.affected) {
           return res.status(404).json({ code: 0, message: 'blog not found' });
         }
-        res.status(200).json({ code: 1 });
+        const revalidated = await revalidateBlogPage(res, id);
+        res.status(200).json({ code: 1, revalidated });
       } catch (e) {
         console.error(e);
         res.status(500).json({ code: 0, message: '服务异常' });

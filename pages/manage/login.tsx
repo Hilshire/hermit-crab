@@ -28,13 +28,22 @@ export default function Login() {
       } else if (res.data.code) {
         setSnackbar(true, 'authentication success', 'success', () => {
           const url = new window.URL(location.href);
-          if (url.searchParams.has('target')) {
-            location.href = `${url.origin}${url.searchParams.get('target')}`;
-          } else {
-            location.href = `${url.origin}/manage/blog`;
-          }
+          location.href = getSafeTarget(url.searchParams.get('target'));
         });
       }
+    }, (e) => {
+      setSnackbar(true, e.response?.status === 401 ? 'authentication fail' : 'login failed', 'error');
     });
+  }
+
+  function getSafeTarget(target: string | null) {
+    if (!target || !target.startsWith('/') || target.startsWith('//')) {
+      return '/manage/blog';
+    }
+
+    const targetUrl = new window.URL(target, window.location.origin);
+    return targetUrl.origin === window.location.origin
+      ? `${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`
+      : '/manage/blog';
   }
 }

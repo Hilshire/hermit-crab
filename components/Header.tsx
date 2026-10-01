@@ -5,9 +5,9 @@ export function Header() {
   return (
     <div className="header">
       <ul className="nav">
-        <Link href={`/?type=${BlogType.ESSAY}${BlogType.SHOWER_THOUGHTS}`}><li>杂谈</li></Link>
-        <Link href="/"><li>blog</li></Link>
-        <Link href="/about-me"><li>About Me</li></Link>
+        <li><Link href={`/?type=${BlogType.ESSAY}${BlogType.SHOWER_THOUGHTS}`}>杂谈</Link></li>
+        <li><Link href="/">blog</Link></li>
+        <li><Link href="/about-me">About Me</Link></li>
       </ul>
     </div>
   );

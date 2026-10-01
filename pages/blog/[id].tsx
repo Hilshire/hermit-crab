@@ -2,23 +2,27 @@ import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { Blog as BlogEntity } from '@server/entity';
 import { getRepo } from '@utils';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
+import { CodeComponent, NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 import { DEFAULT_APP_TITLE } from '@const';
-import { UtterancesComments } from '@components';
+import type { GetStaticPaths, GetStaticProps } from 'next';
+import { serializeDate } from '@server/dto';
+import type { BlogDetail, TagDto } from '@server/dto';
+import { UtterancesComments } from '../../components/UtterancesComments';
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   // @ts-ignore
   code({
     node, inline, className, children, ...props
-  }) {
+  }: Parameters<CodeComponent>[0]) {
     const match = /language-(\w+)/.exec(className || '');
     const language = (match && match[1]) || 'javascript';
     return !inline ? (
-      <SyntaxHighlighter style={nord} language={language} PreTag="div" {...props}>
+      <SyntaxHighlighter style={nord} language={language} PreTag="div">
         { String(children).replace(/\n$/, '') }
       </SyntaxHighlighter>
     ) : (
@@ -27,24 +31,24 @@ const components: Partial<NormalComponents & SpecialComponents> = {
   },
 };
 
-export function Blog({ blogJson }) {
+interface Props {
+  blog: BlogDetail | null;
+}
+
+export function Blog({ blog }: Props) {
   const router = useRouter();
 
-  if (router.isFallback) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    const appTitle = blog?.title ? `${blog.title} - ${DEFAULT_APP_TITLE}` : DEFAULT_APP_TITLE;
+    document.title = appTitle;
+  }, [blog?.title]);
 
-  const data: BlogEntity = JSON.parse(blogJson);
+  if (router.isFallback || !blog) return <div>Loading...</div>;
 
+  const data = blog;
   const {
     title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt,
   } = data;
-
-  useEffect(() => {
-    let appTitle = DEFAULT_APP_TITLE;
-    data.title && (appTitle = `${data.title} - ${DEFAULT_APP_TITLE}`);
-    document.title = appTitle;
-  }, [data]);
 
   return (
     <div className="blog page-content">
@@ -59,7 +63,13 @@ export function Blog({ blogJson }) {
           </p>
         </div>
         <div className="right">
-          <img className="banner-image" src={`https://picsum.photos/seed/${title}/768/542`} alt="banner" />
+          <Image
+            className="banner-image"
+            src={`https://picsum.photos/seed/${title}/768/542`}
+            alt="banner"
+            width={768}
+            height={542}
+          />
           <div className="image_placeholder" />
         </div>
       </section>
@@ -69,15 +79,13 @@ export function Blog({ blogJson }) {
   );
 }
 
-export function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-}
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
-export async function getStaticProps({ params }) {
-  const { id } = params;
+export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({ params }) => {
+  const { id } = params || {};
   if (!id) {
     return {
       notFound: true,
@@ -92,7 +100,7 @@ export async function getStaticProps({ params }) {
     };
   }
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOneBy({ id: blogId });
+  const blog = await repo.findOne({ where: { id: blogId }, relations: { tags: true } });
   if (!blog) {
     return {
       notFound: true,
@@ -102,10 +110,22 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      blogJson: JSON.stringify(blog),
+      blog: {
+        id: blog.id,
+        title: blog.title,
+        context: blog.context,
+        blogType: blog.blogType,
+        createAt: serializeDate(blog.createAt),
+        lastUpdateAt: serializeDate(blog.lastUpdateAt),
+        tags: blog.tags.map((tag: TagDto) => ({
+          id: tag.id,
+          name: tag.name,
+          color: tag.color,
+        })),
+      },
     },
     revalidate: 60 * 60 * 24,
   };
-}
+};
 
 export default Blog;

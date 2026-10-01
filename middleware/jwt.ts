@@ -1,33 +1,36 @@
-import { ServerResponse } from 'http';
-import jwt from 'jsonwebtoken';
-import { NextApiResponse } from 'next';
-import { CustomRequest } from 'utils/type';
+import { verify } from 'jsonwebtoken';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { getJwtSecret } from '@server/config';
 
-export default (handler?) => async (req: CustomRequest, res: NextApiResponse | ServerResponse) => {
+export function isAuthenticated(req: Pick<NextApiRequest, 'cookies'>) {
+  const { token } = req.cookies;
+  if (!token) return false;
+
+  const secretKey = getJwtSecret();
+
   try {
-    if (!req.cookies.token) {
-      return handlerError(req, res);
-    }
-    try {
-      jwt.verify(req.cookies.token, process.env.SECRET_KEY);
-      handler?.(req, res);
-    } catch (e) {
-      console.error(e);
-      return handlerError(req, res);
-    }
+    verify(token, secretKey);
+    return true;
   } catch (e) {
-    console.error(e);
-    return handlerError(req, res);
+    return false;
   }
-};
+}
 
-function handlerError(req, res: NextApiResponse | ServerResponse) {
-  if ('redirect' in res) {
-    return res.json({ code: 2, location: '/manage/login' });
-  }
+export function getLoginRedirect(req: Pick<NextApiRequest, 'url'>) {
+  const target = req.url || '/manage/blog';
+  return `/manage/login?target=${encodeURIComponent(target)}`;
+}
 
-  res.writeHead(303, {
-    Location: `/manage/login?target=${req.url}`,
-  });
-  return res.end();
+export default function jwt(handler: NextApiHandler): NextApiHandler {
+  return async (req, res) => {
+    if (!isAuthenticated(req)) {
+      return handlerError(res);
+    }
+
+    return handler(req, res);
+  };
+}
+
+function handlerError(res: NextApiResponse) {
+  return res.status(401).json({ code: 2, location: '/manage/login' });
 }

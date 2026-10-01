@@ -2,17 +2,30 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { sign } from 'jsonwebtoken';
 import { compareSync } from 'bcryptjs';
 import { serialize } from 'cookie';
+import { getClaimHash, getJwtSecret } from '@server/config';
+import { isValidClaim } from '@server/validation';
 
 const login = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ code: 0, message: 'method not allowed' });
+  }
+
   const { claim } = req.body;
+  if (!isValidClaim(claim)) {
+    return res.status(400).json({ code: 0, message: 'invalid request' });
+  }
+
+  const claimHash = getClaimHash();
+  const secretKey = getJwtSecret();
 
   try {
-    if (compareSync(claim, process.env.CLAIM)) {
+    if (compareSync(claim, claimHash)) {
       const jwt = sign(
         {
           exp: Math.floor(Date.now() / 1000) + (60 * 60),
         },
-        process.env.SECRET_KEY,
+        secretKey,
       );
 
       res.setHeader('Set-Cookie', serialize('token', jwt, {

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createHash } from 'crypto';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -14,9 +15,10 @@ import { BlogSeries } from '../../components/BlogSeries';
 interface Props {
   blog: BlogDetail | null;
   children: BlogDetail[];
+  coverSeed: string;
 }
 
-export function Blog({ blog, children = [] }: Props) {
+export function Blog({ blog, children = [], coverSeed }: Props) {
   const bannerRef = useRef<HTMLElement>(null);
   const router = useRouter();
 
@@ -45,13 +47,15 @@ export function Blog({ blog, children = [] }: Props) {
           </p>
         </div>
         <div className="right">
-          <Image
-            className="banner-image"
-            src={`https://picsum.photos/seed/${title}/768/542`}
-            alt="banner"
-            width={768}
-            height={542}
-          />
+          {coverSeed && (
+            <Image
+              className="banner-image"
+              src={`https://picsum.photos/seed/${coverSeed}/768/542`}
+              alt="banner"
+              width={768}
+              height={542}
+            />
+          )}
           <div className="image_placeholder" />
         </div>
       </section>
@@ -70,7 +74,8 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
   if (!blog) return { notFound: true };
   if (blog.parentId) return { redirect: { destination: `/blog/${blog.parentId}#blog-${blog.id}`, permanent: false } };
   const children = await repo.find({ where: { parentId: id, deletedAt: IsNull() }, relations: { tags: true }, order: { createAt: 'ASC', id: 'ASC' } });
-  return { props: { blog: serializeBlogDetail(blog), children: children.map(serializeBlogDetail) } };
+  const coverSeed = createHash('md5').update(blog.title, 'utf8').digest('hex');
+  return { props: { blog: serializeBlogDetail(blog), children: children.map(serializeBlogDetail), coverSeed } };
 };
 
 export default Blog;

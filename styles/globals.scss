@@ -5,6 +5,7 @@
   color-scheme: dark;
   --page-bg: #{$墨};
   --surface: #{$吕};
+  --banner-bg: #{$吕};
   --text: #{$白练};
   --text-muted: #{$白鼠};
   --link: #{$千草};
@@ -19,6 +20,7 @@
   color-scheme: light;
   --page-bg: #{$白练};
   --surface: #{$胡粉};
+  --banner-bg: #{mix($白鼠, $白练, 30%)};
   --text: #{$墨};
   --text-muted: #{$蓝墨茶};
   --link: #{$铁御纳户};

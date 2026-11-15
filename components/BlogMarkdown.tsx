@@ -1,10 +1,20 @@
 import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github, nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-import { CodeComponent, NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
+import {
+  CodeComponent,
+  NormalComponents,
+  SpecialComponents,
+} from 'react-markdown/src/ast-to-react';
 import { useThemeMode } from '../hooks/useThemeMode';
 
-function BlogCode({ node, inline, className, children, ...props }: Parameters<CodeComponent>[0]) {
+function BlogCode({
+  node,
+  inline,
+  className,
+  children,
+  ...props
+}: Parameters<CodeComponent>[0]) {
   const { mode } = useThemeMode();
   const match = /language-(\w+)/.exec(className || '');
   const language = (match && match[1]) || 'javascript';
@@ -20,6 +30,13 @@ const components: Partial<NormalComponents & SpecialComponents> = {
   code: BlogCode,
 };
 
-export function BlogMarkdown({ content, className }: { content: string; className?: string }) {
+interface BlogMarkdownProps {
+  content: string;
+  className?: string;
+}
+
+export function BlogMarkdown({ content, className }: BlogMarkdownProps) {
   return <ReactMarkdown className={className} components={components}>{content}</ReactMarkdown>;
 }
+
+BlogMarkdown.defaultProps = { className: '' };

@@ -72,10 +72,24 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
     where: { id, deletedAt: IsNull() }, relations: { tags: true },
   });
   if (!blog) return { notFound: true };
-  if (blog.parentId) return { redirect: { destination: `/blog/${blog.parentId}#blog-${blog.id}`, permanent: false } };
-  const children = await repo.find({ where: { parentId: id, deletedAt: IsNull() }, relations: { tags: true }, order: { createAt: 'ASC', id: 'ASC' } });
+  if (blog.parentId) {
+    return {
+      redirect: { destination: `/blog/${blog.parentId}#blog-${blog.id}`, permanent: false },
+    };
+  }
+  const children = await repo.find({
+    where: { parentId: id, deletedAt: IsNull() },
+    relations: { tags: true },
+    order: { createAt: 'ASC', id: 'ASC' },
+  });
   const coverSeed = createHash('md5').update(blog.title, 'utf8').digest('hex');
-  return { props: { blog: serializeBlogDetail(blog), children: children.map(serializeBlogDetail), coverSeed } };
+  return {
+    props: {
+      blog: serializeBlogDetail(blog),
+      children: children.map(serializeBlogDetail),
+      coverSeed,
+    },
+  };
 };
 
 export default Blog;

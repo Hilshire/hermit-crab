@@ -29,7 +29,12 @@ export function BlogSeries({ blog, entries, bannerRef }: Props) {
   useEffect(() => { setReverse(localStorage.getItem('blog-series-reverse') === 'true'); }, []);
   return (
     <>
-      <SeriesNavigation title={blog.title} entries={entries} reverse={reverse} bannerRef={bannerRef} />
+      <SeriesNavigation
+        title={blog.title}
+        entries={entries}
+        reverse={reverse}
+        bannerRef={bannerRef}
+      />
       <div id="blog-intro" className="main-content"><BlogMarkdown content={blog.context} /></div>
       <div className="series-content">
         <ArticleComments key={blog.id} blog={blog} standalone={entries.length === 0} />
@@ -78,3 +83,5 @@ export function BlogSeries({ blog, entries, bannerRef }: Props) {
     </>
   );
 }
+
+ArticleComments.defaultProps = { standalone: false };

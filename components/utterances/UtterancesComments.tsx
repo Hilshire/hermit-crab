@@ -9,7 +9,7 @@ interface Props { term: string; issueNumber?: number | null; standalone?: boolea
 export const UtterancesComments: React.FC<Props> = ({ term, issueNumber, standalone = false }) => {
   const { mode } = useThemeMode();
   const utterancesTheme = mode === 'light' ? 'github-light' : 'photon-dark';
-  const themeRef = useRef(utterancesTheme);
+  const themeRef = useRef<'photon-dark' | 'github-light'>(utterancesTheme);
   themeRef.current = utterancesTheme;
   const [open, setOpen] = useState(standalone);
   const [visible, setVisible] = useState(false);

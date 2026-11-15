@@ -1,4 +1,8 @@
-import { RefObject, useEffect, useState } from 'react';
+import {
+  RefObject,
+  useEffect,
+  useState,
+} from 'react';
 import type { BlogDetail } from '@server/dto';
 
 interface Props {
@@ -8,7 +12,12 @@ interface Props {
   bannerRef: RefObject<HTMLElement>;
 }
 
-export function SeriesNavigation({ title, entries, reverse, bannerRef }: Props) {
+export function SeriesNavigation({
+  title,
+  entries,
+  reverse,
+  bannerRef,
+}: Props) {
   const [visible, setVisible] = useState(false);
   const [activeEntry, setActiveEntry] = useState<number | null>(null);
   const [label, setLabel] = useState<{ title: string; top: number } | null>(null);

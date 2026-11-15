@@ -124,7 +124,11 @@ ${type === 'preview' ? data.context : context}
 
   function handleSubmit() {
     axios.put(`/api/blog/${data.id}`, {
-      title, context, blogType, tagIds, parentId: parentId || null,
+      title,
+      context,
+      blogType,
+      tagIds,
+      parentId: parentId || null,
       commentIssueNumber: commentIssueNumber ? Number(commentIssueNumber) : null,
     })
       .then((res) => {

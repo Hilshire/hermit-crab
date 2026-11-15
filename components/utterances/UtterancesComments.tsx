@@ -4,18 +4,19 @@ import { useThemeMode } from '../../hooks/useThemeMode';
 import { getCommentPreview } from './comment-preview';
 import type { CommentPreview } from './comment-preview';
 
-interface Props { term: string; issueNumber?: number | null }
+interface Props { term: string; issueNumber?: number | null; standalone?: boolean }
 
-export const UtterancesComments: React.FC<Props> = ({ term, issueNumber }) => {
+export const UtterancesComments: React.FC<Props> = ({ term, issueNumber, standalone = false }) => {
   const { mode } = useThemeMode();
   const utterancesTheme = mode === 'light' ? 'github-light' : 'photon-dark';
   const themeRef = useRef(utterancesTheme);
   themeRef.current = utterancesTheme;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(standalone);
   const [visible, setVisible] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const [preview, setPreview] = useState<CommentPreview | null>(null);
   const [widgetStatus, setWidgetStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [issue, setIssue] = useState<number | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error' | 'ambiguous'>('loading');
   const container = useRef<HTMLElement>(null);
@@ -53,13 +54,15 @@ export const UtterancesComments: React.FC<Props> = ({ term, issueNumber }) => {
     return () => { active = false; };
   }, [term, issueNumber, visible]);
 
+  useEffect(() => { setOpen(standalone); }, [standalone]);
+
   useEffect(() => {
     const node = container.current;
-    if (!open || !node) return undefined;
+    if (!open || status !== 'ready' || !node) return undefined;
     setWidgetStatus('loading');
     return loadUtterances(node, term, issue, () => setWidgetStatus('error'),
       () => setWidgetStatus('ready'), themeRef.current);
-  }, [open, term, issue]);
+  }, [open, term, issue, status, loadAttempt]);
 
   useEffect(() => {
     const frame = container.current?.querySelector('iframe');
@@ -75,7 +78,7 @@ export const UtterancesComments: React.FC<Props> = ({ term, issueNumber }) => {
   if (open) buttonLabel = '收起评论';
   return (
     <div ref={root} className="series-comments">
-      {preview && (
+      {!standalone && preview && (
       <p className="comment-preview">
         最新评论：
         {preview.user.login}
@@ -84,13 +87,26 @@ export const UtterancesComments: React.FC<Props> = ({ term, issueNumber }) => {
         {preview.body}
       </p>
       )}
-      <button type="button" disabled={status !== 'ready'} onClick={() => setOpen(!open)}>{buttonLabel}</button>
+      {!standalone && <button type="button" disabled={status !== 'ready'} onClick={() => setOpen(!open)}>{buttonLabel}</button>}
       {(status === 'error' || status === 'ambiguous') && (
         <p>无法确定评论归属，请稍后重试或在后台指定评论 Issue 编号。</p>
       )}
-      {open && (
+      {standalone && status === 'loading' && (
+        <div className="comment-loading" role="status">
+          <span className="comment-spinner" aria-hidden="true" />
+          <span>评论加载中</span>
+        </div>
+      )}
+      {open && status === 'ready' && (
         <>
-          {widgetStatus === 'error' && <p>评论组件加载失败，请检查网络后收起并重试。</p>}
+          {widgetStatus === 'error' && (
+            <p>
+              评论组件加载失败，请检查网络。
+              {standalone
+                ? <button type="button" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>重试</button>
+                : '请收起并重试。'}
+            </p>
+          )}
           {widgetStatus === 'loading' && (
             <div className="comment-loading" role="status">
               <span className="comment-spinner" aria-hidden="true" />

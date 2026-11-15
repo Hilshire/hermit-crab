@@ -39,7 +39,8 @@ body {
   ::-webkit-scrollbar-thumb {
     background-color: var(--text-muted);
   }
-  height: 100%;
+  min-height: 100%;
+  background-color: var(--page-bg);
   padding: 0;
   margin: 0;
   font-family: $font-family-common;

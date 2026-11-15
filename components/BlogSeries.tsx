@@ -11,11 +11,12 @@ interface Props {
   bannerRef: RefObject<HTMLElement>;
 }
 
-function ArticleComments({ blog }: { blog: BlogDetail }) {
+function ArticleComments({ blog, standalone = false }: { blog: BlogDetail; standalone?: boolean }) {
   return (
     <UtterancesComments
       term={blog.commentTerm || `${blog.title} - hilshire's blog`}
       issueNumber={blog.commentIssueNumber}
+      standalone={standalone}
     />
   );
 }
@@ -31,7 +32,7 @@ export function BlogSeries({ blog, entries, bannerRef }: Props) {
       <SeriesNavigation title={blog.title} entries={entries} reverse={reverse} bannerRef={bannerRef} />
       <div id="blog-intro" className="main-content"><BlogMarkdown content={blog.context} /></div>
       <div className="series-content">
-        <ArticleComments blog={blog} />
+        <ArticleComments key={blog.id} blog={blog} standalone={entries.length === 0} />
         {entries.length > 0 && (
           <>
             <div className="series-controls">

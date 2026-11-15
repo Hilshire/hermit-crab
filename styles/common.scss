@@ -10,13 +10,13 @@
 
 .pagination {
     margin-top: 10vh;
-    color: $白鼠;
+    color: var(--text-muted);
     font-size: 14px;
     bottom: 0;
 }
 
 .banner {
-    background-color: $吕;
+    background-color: var(--banner-bg);
     display: flex;
     justify-content: space-between;
     align-self: stretch;
@@ -39,11 +39,11 @@
     }
     div.right {
         width: 100%;
-        background-color: #434343;
+        background-color: var(--image-placeholder);
     }
     .time {
         font-size: 18px;
-        color: $白鼠;
+        color: var(--text-muted);
     }
     .title {
         font-weight: 600;
@@ -57,10 +57,10 @@
     max-width: 70%;
     a {
         text-decoration: underline;
-        color: $千草;
+        color: var(--link);
     }
     a:visited {
-        color: $千草;
+        color: var(--link);
     }
 
     p {
@@ -74,6 +74,6 @@
 
     blockquote {
         padding-left: 1em;
-        border-left: solid 2px $千草;
+        border-left: solid 2px var(--link);
     }
 }

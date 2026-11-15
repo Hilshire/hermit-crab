@@ -1,3 +1,5 @@
+import { IsNull, In } from 'typeorm';
+import { serializeDate } from '@server/dto';
 import { Blog as BlogEntity } from '@server/entity';
 import { BlogType } from '@server/entity/type';
 import { getRepo } from '@utils';
@@ -24,6 +26,15 @@ export default function Home({ list: blogList, count }: Props) {
         {blogList.map((b) => (
           <div className="blog-list-item" key={b.id}>
             <Link href={`/blog/${b.id}`}>{b.title}</Link>
+            {b.latest && (
+            <div className="blog-latest">
+              最近更新：
+              {b.latest.title}
+              {' '}
+              ·
+              {b.latest.date.slice(0, 10)}
+            </div>
+            )}
             {b.tags.length > 0 && (
               <sup className="blog-list-tags" aria-label="文章标签">
                 {b.tags.map((tag) => (
@@ -57,7 +68,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     .createQueryBuilder('blog')
     .leftJoinAndSelect('blog.tags', 'tag')
     .select(['blog.title', 'blog.createAt', 'blog.lastUpdateAt', 'blog.id', 'blog.blogType', 'tag.id', 'tag.name'])
-    .where('blog.blogType IN (:...types)', { types: type.split('') });
+    .where('blog.blogType IN (:...types)', { types: type.split('') })
+    .andWhere('blog.parentId IS NULL AND blog.deletedAt IS NULL');
 
   const blog = await blogBuilder
     .skip((page - 1) * 5)
@@ -65,17 +77,26 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     .orderBy('blog.createAt', 'DESC')
     .getMany();
   const count = await blogBuilder.getCount();
+  const children = blog.length ? await repo.find({
+    select: ['id', 'parentId', 'title', 'lastUpdateAt'],
+    where: { parentId: In(blog.map((item) => item.id)), deletedAt: IsNull() },
+    order: { lastUpdateAt: 'DESC' },
+  }) : [];
 
   return {
     props: {
       list: blog.map(({
         id, title, blogType, tags,
-      }) => ({
-        id,
-        title,
-        blogType,
-        tags: tags.map(({ id: tagId, name }) => ({ id: tagId, name })),
-      })),
+      }) => {
+        const latest = children.find((child) => child.parentId === id);
+        return ({
+          id,
+          title,
+          blogType,
+          tags: tags.map(({ id: tagId, name }) => ({ id: tagId, name })),
+          latest: latest ? { title: latest.title, date: serializeDate(latest.lastUpdateAt) } : null,
+        });
+      }),
       count,
     },
   };

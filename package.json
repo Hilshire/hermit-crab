@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=23"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "migration:run": "tsc -p tsconfig.migrations.json && NODE_ENV=production typeorm migration:run -d .migration-build/migration-data-source.js --transaction none",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
     "test": "jest --runInBand"

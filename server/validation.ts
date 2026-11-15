@@ -1,11 +1,6 @@
 import { BlogType } from './entity/type';
 
-interface BlogInput {
-  title: string;
-  context: string;
-  blogType: BlogType;
-  tagIds: number[];
-}
+import type { BlogInput } from './dto';
 
 interface TagInput {
   name: string;
@@ -30,7 +25,7 @@ export function parseBlogInput(value: unknown): BlogInput | null {
   if (!isRecord(value)) return null;
 
   const {
-    title, context, blogType, tagIds,
+    title, context, blogType, tagIds, parentId, commentIssueNumber,
   } = value;
   const validBlogTypes = [
     BlogType.COMMON,
@@ -43,6 +38,10 @@ export function parseBlogInput(value: unknown): BlogInput | null {
     || !isNonEmptyString(context)
     || typeof blogType !== 'number'
     || !validBlogTypes.includes(blogType)
+    || (parentId !== undefined && parentId !== null
+      && (!Number.isSafeInteger(parentId) || (parentId as number) <= 0))
+    || (commentIssueNumber !== undefined && commentIssueNumber !== null
+      && (!Number.isSafeInteger(commentIssueNumber) || (commentIssueNumber as number) <= 0))
     || (tagIds !== undefined && (!Array.isArray(tagIds)
       || !tagIds.every((id) => Number.isSafeInteger(id) && id > 0)
       || new Set(tagIds).size !== tagIds.length))) {
@@ -54,6 +53,8 @@ export function parseBlogInput(value: unknown): BlogInput | null {
     context,
     blogType,
     tagIds: tagIds || [],
+    parentId: parentId as number | null | undefined,
+    commentIssueNumber: commentIssueNumber as number | null | undefined,
   };
 }
 

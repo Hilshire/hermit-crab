@@ -28,6 +28,21 @@ export default class Blog {
   @OneToMany(() => Comment, (comment) => comment.blog)
   comments: Relation<Comment>[];
 
+  @Column('int', { nullable: true })
+  parentId: number | null;
+
+  @Column('text', { nullable: true })
+  commentTerm: string | null;
+
+  @Column('int', { nullable: true })
+  commentIssueNumber: number | null;
+
+  @Column('datetime', { nullable: true })
+  deletedAt: Date | null;
+
+  @Column('int', { nullable: true })
+  deletedWithId: number | null;
+
   @CreateDateColumn()
   createAt: string;
 

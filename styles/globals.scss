@@ -1,17 +1,48 @@
 @import "./const.scss";
 @import "../node_modules/normalize.css/normalize.css";
 
+:root {
+  color-scheme: dark;
+  --page-bg: #{$墨};
+  --surface: #{$吕};
+  --banner-bg: #{$吕};
+  --text: #{$白练};
+  --text-muted: #{$白鼠};
+  --link: #{$千草};
+  --about-link: #{$勿忘草};
+  --border: #{rgba($胡粉, 0.2)};
+  --border-strong: #{rgba($胡粉, 0.45)};
+  --spinner-track: #{rgba($白鼠, 0.25)};
+  --image-placeholder: #{$蓝墨茶};
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --page-bg: #{$白练};
+  --surface: #{$胡粉};
+  --banner-bg: #{mix($白鼠, $白练, 30%)};
+  --text: #{$墨};
+  --text-muted: #{$蓝墨茶};
+  --link: #{$铁御纳户};
+  --about-link: #{$御召神纳户};
+  --border: #{rgba($墨, 0.22)};
+  --border-strong: #{rgba($墨, 0.5)};
+  --spinner-track: #{rgba($蓝墨茶, 0.2)};
+  --image-placeholder: #{$白鼠};
+}
+
 html,
 body {
   ::-webkit-scrollbar {
-    background-color: $墨;
+    background-color: var(--page-bg);
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: $白鼠;
+    background-color: var(--text-muted);
   }
-  height: 100%;
+  min-height: 100%;
+  background-color: var(--page-bg);
   padding: 0;
   margin: 0;
   font-family: $font-family-common;

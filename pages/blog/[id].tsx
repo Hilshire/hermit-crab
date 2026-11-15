@@ -1,41 +1,25 @@
-import { useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { useEffect, useRef } from 'react';
+import { createHash } from 'crypto';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { Blog as BlogEntity } from '@server/entity';
 import { getRepo } from '@utils';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { nord } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-import { CodeComponent, NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 import { DEFAULT_APP_TITLE } from '@const';
-import type { GetStaticPaths, GetStaticProps } from 'next';
-import { serializeDate } from '@server/dto';
-import type { BlogDetail, TagDto } from '@server/dto';
-import { UtterancesComments } from '../../components/UtterancesComments';
-
-const components: Partial<NormalComponents & SpecialComponents> = {
-  // @ts-ignore
-  code({
-    node, inline, className, children, ...props
-  }: Parameters<CodeComponent>[0]) {
-    const match = /language-(\w+)/.exec(className || '');
-    const language = (match && match[1]) || 'javascript';
-    return !inline ? (
-      <SyntaxHighlighter style={nord} language={language} PreTag="div">
-        { String(children).replace(/\n$/, '') }
-      </SyntaxHighlighter>
-    ) : (
-      <code className={className} {...props}>{children}</code>
-    );
-  },
-};
+import type { GetServerSideProps } from 'next';
+import { IsNull } from 'typeorm';
+import { serializeBlogDetail } from '@server/dto';
+import type { BlogDetail } from '@server/dto';
+import { BlogSeries } from '../../components/BlogSeries';
 
 interface Props {
   blog: BlogDetail | null;
+  children: BlogDetail[];
+  coverSeed: string;
 }
 
-export function Blog({ blog }: Props) {
+export function Blog({ blog, children = [], coverSeed }: Props) {
+  const bannerRef = useRef<HTMLElement>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,12 +31,12 @@ export function Blog({ blog }: Props) {
 
   const data = blog;
   const {
-    title = 'Ops!', context = 'something went wrong', createAt, lastUpdateAt,
+    title = 'Ops!', createAt, lastUpdateAt,
   } = data;
 
   return (
     <div className="blog page-content">
-      <section className="banner">
+      <section className="banner" ref={bannerRef}>
         <div className="left">
           <p className="title">{title}</p>
           <p className="create-time time">
@@ -63,68 +47,48 @@ export function Blog({ blog }: Props) {
           </p>
         </div>
         <div className="right">
-          <Image
-            className="banner-image"
-            src={`https://picsum.photos/seed/${title}/768/542`}
-            alt="banner"
-            width={768}
-            height={542}
-          />
+          {coverSeed && (
+            <Image
+              className="banner-image"
+              src={`https://picsum.photos/seed/${coverSeed}/768/542`}
+              alt="banner"
+              width={768}
+              height={542}
+            />
+          )}
           <div className="image_placeholder" />
         </div>
       </section>
-      <ReactMarkdown className="main-content" components={components}>{context}</ReactMarkdown>
-      <UtterancesComments />
+      <BlogSeries blog={data} entries={children} bannerRef={bannerRef} />
     </div>
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
-
-export const getStaticProps: GetStaticProps<Props, { id: string }> = async ({ params }) => {
-  const { id } = params || {};
-  if (!id) {
-    return {
-      notFound: true,
-      revalidate: 60 * 5,
-    };
-  }
-  const blogId = Number(id);
-  if (!Number.isInteger(blogId)) {
-    return {
-      notFound: true,
-      revalidate: 60 * 5,
-    };
-  }
+export const getServerSideProps: GetServerSideProps<Props, { id: string }> = async ({ params }) => {
+  const id = Number(params?.id);
+  if (!Number.isSafeInteger(id) || id <= 0) return { notFound: true };
   const repo = await getRepo<BlogEntity>(BlogEntity);
-  const blog = await repo.findOne({ where: { id: blogId }, relations: { tags: true } });
-  if (!blog) {
+  const blog = await repo.findOne({
+    where: { id, deletedAt: IsNull() }, relations: { tags: true },
+  });
+  if (!blog) return { notFound: true };
+  if (blog.parentId) {
     return {
-      notFound: true,
-      revalidate: 60 * 5,
+      redirect: { destination: `/blog/${blog.parentId}#blog-${blog.id}`, permanent: false },
     };
   }
-
+  const children = await repo.find({
+    where: { parentId: id, deletedAt: IsNull() },
+    relations: { tags: true },
+    order: { createAt: 'ASC', id: 'ASC' },
+  });
+  const coverSeed = createHash('md5').update(blog.title, 'utf8').digest('hex');
   return {
     props: {
-      blog: {
-        id: blog.id,
-        title: blog.title,
-        context: blog.context,
-        blogType: blog.blogType,
-        createAt: serializeDate(blog.createAt),
-        lastUpdateAt: serializeDate(blog.lastUpdateAt),
-        tags: blog.tags.map((tag: TagDto) => ({
-          id: tag.id,
-          name: tag.name,
-          color: tag.color,
-        })),
-      },
+      blog: serializeBlogDetail(blog),
+      children: children.map(serializeBlogDetail),
+      coverSeed,
     },
-    revalidate: 60 * 60 * 24,
   };
 };
 

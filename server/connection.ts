@@ -5,6 +5,7 @@ import {
   Blog, Tag, Comment,
 } from './entity';
 import { getDatabaseConfig } from './config';
+import { BlogSeries1700000000001 } from './migrations/1700000000001-blog-series';
 import { InitialSqliteSchema1700000000000 } from './migrations/1700000000000-initial-sqlite-schema';
 
 let appDataSource: Promise<DataSource> | null = null;
@@ -39,7 +40,7 @@ export function getDataSourceOptions(): DataSourceOptions {
       ...common,
       type: 'sqlite',
       database,
-      migrations: [InitialSqliteSchema1700000000000],
+      migrations: [InitialSqliteSchema1700000000000, BlogSeries1700000000001],
       migrationsRun: process.env.NODE_ENV === 'production',
     };
   }
@@ -59,7 +60,7 @@ export function getDataSourceOptions(): DataSourceOptions {
     username,
     password,
     database,
-    migrations: ['migration/*.js'],
+    migrations: [BlogSeries1700000000001],
     extra: {
       charset: 'utf8mb4_unicode_ci',
     },

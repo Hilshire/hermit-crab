@@ -60,6 +60,7 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
   const blogQuery = blogRepo
     .createQueryBuilder('blog')
     .innerJoin('blog.tags', 'filterTag', 'filterTag.id = :tagId', { tagId })
+    .andWhere('blog.parentId IS NULL AND blog.deletedAt IS NULL')
     .select(['blog.id', 'blog.title', 'blog.blogType', 'blog.createAt'])
     .orderBy('blog.createAt', 'DESC');
   const [blogs, count] = await Promise.all([
@@ -67,6 +68,7 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
     blogRepo
       .createQueryBuilder('blog')
       .innerJoin('blog.tags', 'filterTag', 'filterTag.id = :tagId', { tagId })
+      .andWhere('blog.parentId IS NULL AND blog.deletedAt IS NULL')
       .getCount(),
   ]);
 

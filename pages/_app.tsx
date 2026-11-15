@@ -4,16 +4,12 @@ import '../styles/globals.scss';
 import { useRestoreAppTitle } from '@hooks';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeModeProvider } from '../hooks/useThemeMode';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { AppLoading } from '../components/AppLoading';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 
-const darkTheme = createTheme({
-  palette: {
-    type: 'dark',
-  },
-});
 // axios
 axios.interceptors.response.use((res) => {
   if (/(.+)?application\/json(.+)?/.exec(res.headers['content-type'])) {
@@ -42,12 +38,13 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <link rel="icon" href="/Police_dice.png" />
       </Head>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeModeProvider>
         <AppLoading />
         { !isInManage && <Header /> }
+        { isInManage && <div className="manage-theme-toggle"><ThemeToggle /></div> }
         <Component {...pageProps} />
         { !isInManage && !isInHome && <Footer /> }
-      </ThemeProvider>
+      </ThemeModeProvider>
     </>
   );
 }

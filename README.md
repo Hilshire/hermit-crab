@@ -1,6 +1,19 @@
 # hermit crab
 
-hilshire 的[博客](https://www.hilshire.cyou/)。
+hilshire 的[博客](https://hilshire.date/)。
+
+## 项目结构
+
+项目使用 Next.js Pages Router 和 TypeORM，页面、接口与数据库代码在同一个仓库中：
+
+- `pages/`：页面路由及服务端数据读取；`pages/api/` 负责 HTTP 请求、参数校验和响应。当前页面读取通常通过 `getRepo` 直接查询实体。
+- `server/`：数据库配置、实体、DTO、校验和迁移。`server/services/blog.ts` 集中处理文章系列的写入规则和事务；并非所有业务都有独立服务层。
+- `components/`：界面组件。只服务于特定组件的辅助逻辑放在该功能附近；例如 `components/utterances/` 负责评论展示、GitHub 评论查询和 Utterances 加载。
+- `hooks/`：供 React 组件使用的状态与生命周期逻辑。
+- `middleware/`：目前负责登录验证与重定向；`utils/` 中的 `getRepo` 是现有数据库仓库入口。
+- `styles/`：全局和按页面或功能组织的 SCSS。
+
+文章写入的主要路径是 `pages/api/blog` → 参数校验 → `server/services/blog.ts` → TypeORM；文章详情由 `pages/blog/[id].tsx` 读取数据，再交给 `BlogSeries` 等组件展示。评论预览由浏览器访问 GitHub API，完整评论使用 Utterances。历史评论关联错误时，可在后台编辑文章并指定 GitHub Issue 编号。
 
 ## 配置
 
@@ -32,14 +45,4 @@ Vercel Preview/Production 不支持默认 SQLite：Vercel Function 的文件系�
 
 ## 数据库迁移
 
-开发环境会自动同步实体结构。生产环境已禁用自动同步；使用默认 SQLite 时，应用启动会执行已登记的 migration。所有后续表结构变更必须先通过 TypeORM migration 审核；不要依赖应用启动时的自动同步。
-
-
-## 计划
-
-到目前为止第一阶段的计划已经完成了。实际上这个博客已经开始运作了。不过之前的一些设计被我摒弃了——你会发现似乎花了很大力气的 `Essay` 和 `Tip` 视乎没有用。之后会改成类似 `type` 这样的字段来进行控制。
-
-- [x] 清除项目中的冗余代码
-- [x] 修改数据库结构，增加 type
-- [ ] 实现 tag 功能
-- [ ] 实现一个类似文档库的功能（不确定，可能会放在更后面的版本里）
+生产环境使用 SQLite 时，应用启动时自动执行迁移；使用 MySQL 时，部署前配置数据库并运行 `yarn migration:run`。文章系列迁移不支持自动回滚。

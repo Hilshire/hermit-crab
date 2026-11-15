@@ -20,9 +20,7 @@ export class BlogSeries1700000000001 implements MigrationInterface {
     await queryRunner.query(`UPDATE blog SET commentTerm = ${legacyTerm} WHERE commentTerm IS NULL`);
   }
 
-  async down(queryRunner: QueryRunner): Promise<void> {
-    for (const name of ['deletedWithId', 'deletedAt', 'commentIssueNumber', 'commentTerm', 'parentId']) {
-      await queryRunner.dropColumn('blog', name);
-    }
+  async down(): Promise<void> {
+    throw new Error('This migration cannot be safely reverted automatically because columns may predate it.');
   }
 }

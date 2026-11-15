@@ -1,13 +1,6 @@
 import { BlogType } from './entity/type';
 
-interface BlogInput {
-  title: string;
-  context: string;
-  blogType: BlogType;
-  tagIds: number[];
-  parentId?: number | null;
-  commentIssueNumber?: number | null;
-}
+import type { BlogInput } from './dto';
 
 interface TagInput {
   name: string;

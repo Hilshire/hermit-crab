@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign, class-methods-use-this */
-import { loadUtterances } from '../../components/loadUtterances';
+import { loadUtterances } from '../../components/utterances/loadUtterances';
 
 class FakeElement {
   children: FakeElement[] = [];

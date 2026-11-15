@@ -5,4 +5,4 @@ export * from './ManageNavigation';
 export * from './TagSelector';
 export * from './TagColorPicker';
 export * from './AppLoading';
-export * from './UtterancesComments';
+export * from './utterances/UtterancesComments';

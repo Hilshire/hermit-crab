@@ -11,7 +11,7 @@ import { useSnackbar } from '@hooks';
 import { getRepo } from '@utils';
 import { getLoginRedirect, isAuthenticated } from '@middleware';
 import { blogTextMap, BlogType } from '@server/entity/type';
-import { serializeDate } from '@server/dto';
+import { serializeBlogDetail } from '@server/dto';
 import type { BlogDetail, TagDto } from '@server/dto';
 import { TagSelector } from '../../../components/TagSelector';
 
@@ -166,17 +166,7 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
 
   return {
     props: {
-      blog: {
-        id: blog.id,
-        title: blog.title,
-        context: blog.context,
-        blogType: blog.blogType,
-        parentId: blog.parentId,
-        commentIssueNumber: blog.commentIssueNumber,
-        createAt: serializeDate(blog.createAt),
-        lastUpdateAt: serializeDate(blog.lastUpdateAt),
-        tags: blog.tags.map(({ id, name, color }) => ({ id, name, color })),
-      },
+      blog: serializeBlogDetail(blog),
       parents: parents
         .filter((parent) => parent.id !== blog.id)
         .map(({ id, title }) => ({ id, title })),

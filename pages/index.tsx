@@ -77,7 +77,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     .orderBy('blog.createAt', 'DESC')
     .getMany();
   const count = await blogBuilder.getCount();
-  const children = blog.length ? await repo.find({ where: { parentId: In(blog.map((item) => item.id)), deletedAt: IsNull() }, order: { lastUpdateAt: 'DESC' } }) : [];
+  const children = blog.length ? await repo.find({
+    select: ['id', 'parentId', 'title', 'lastUpdateAt'],
+    where: { parentId: In(blog.map((item) => item.id)), deletedAt: IsNull() },
+    order: { lastUpdateAt: 'DESC' },
+  }) : [];
 
   return {
     props: {

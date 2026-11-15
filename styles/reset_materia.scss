@@ -3,9 +3,9 @@
         height: 2px;
     }
     .MuiLinearProgress-colorPrimary {
-        background-color: $墨;
+        background-color: var(--page-bg);
     }
     .MuiLinearProgress-barColorPrimary {
-        background-color: $白鼠;
+        background-color: var(--text-muted);
     }
 }

@@ -49,14 +49,14 @@
   font-weight: 600;
   margin: 3vh 0;
   &:hover {
-    color: $白鼠;
+    color: var(--text-muted);
   }
 
   .blog-list-tags {
     display: inline-flex;
     gap: 0.35rem;
     margin-left: 0.6rem;
-    color: $白鼠;
+    color: var(--text-muted);
     font-size: 0.4em;
     font-weight: 400;
     line-height: 1;
@@ -76,7 +76,7 @@
     }
 
     a:hover {
-      color: $白练;
+      color: var(--text);
       text-decoration: underline;
     }
   }
@@ -84,7 +84,7 @@
 
 .tag-list-description {
   margin: 0;
-  color: $白练;
+  color: var(--text);
   font-size: 1.15rem;
   letter-spacing: 0.05em;
 }
@@ -96,27 +96,27 @@
   gap: 2rem;
   margin-bottom: 4rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid var(--border);
 }
 
 .tag-page-back {
   flex: 0 0 auto;
   padding: 0.45rem 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  color: $白鼠;
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
   font-size: 0.85rem;
   text-decoration: none;
   transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
 
   &:hover {
-    border-color: $白练;
-    background-color: $白练;
-    color: $墨;
+    border-color: var(--text);
+    background-color: var(--text);
+    color: var(--page-bg);
   }
 }
 
 .tag-list-empty {
-  color: $白鼠;
+  color: var(--text-muted);
   font-size: 1rem;
 }
 
@@ -129,17 +129,17 @@
   }
 }
 
-.blog-latest { font-size: 14px; line-height: 1.6; font-weight: 400; color: $白鼠; }
+.blog-latest { font-size: 14px; line-height: 1.6; font-weight: 400; color: var(--text-muted); }
 .series-content { width: 70%; }
-.series-comments { color: $白鼠; font-size: 14px; margin: 2rem 0; }
-.series-comments button, .series-controls button { color: $白鼠; background: none; border: 0; padding: 0; cursor: pointer; }
+.series-comments { color: var(--text-muted); font-size: 14px; margin: 2rem 0; }
+.series-comments button, .series-controls button { color: var(--text-muted); background: none; border: 0; padding: 0; cursor: pointer; }
 .comment-preview { white-space: pre-wrap; overflow-wrap: anywhere; }
-.series-controls { border-top: 1px solid $白鼠; display: flex; justify-content: space-between; padding: 1rem 0; }
-.series-controls select { color: $白鼠; background: $墨; border: 0; }
-.series-directory { display: grid; gap: 0.75rem; padding: 1rem 0; border-bottom: 1px solid $白鼠; color: $白鼠; }
-.series-entry { border-top: 1px solid rgba(255, 255, 255, 0.22); padding-top: 2rem; }
+.series-controls { border-top: 1px solid var(--text-muted); display: flex; justify-content: space-between; padding: 1rem 0; }
+.series-controls select { color: var(--text-muted); background: var(--page-bg); border: 0; }
+.series-directory { display: grid; gap: 0.75rem; padding: 1rem 0; border-bottom: 1px solid var(--text-muted); color: var(--text-muted); }
+.series-entry { border-top: 1px solid var(--border); padding-top: 2rem; }
 .series-entry h2 { font-family: $font-family-serif; font-size: 32px; margin: 0 0 0.5rem; }
-.series-date { color: $白鼠; font-size: 14px; }
+.series-date { color: var(--text-muted); font-size: 14px; }
 .series-entry .main-content { max-width: 100%; margin-top: 1.5rem; }
 @media (max-width: 800px) { .series-content { width: 90%; } }
 
@@ -167,7 +167,7 @@
   .series-rail-line {
     width: 0.75rem;
     height: 2px;
-    background: $白鼠;
+    background: var(--text-muted);
     transition: width 150ms ease, background-color 150ms ease;
   }
 
@@ -175,7 +175,7 @@
   a:hover .series-rail-line,
   a:focus-visible .series-rail-line {
     width: 1.25rem;
-    background: $白练;
+    background: var(--text);
   }
 
 }
@@ -188,8 +188,8 @@
   max-width: min(24rem, 70vw);
   padding: 0.3rem 0.55rem;
   overflow: hidden;
-  color: $白练;
-  background: $吕;
+  color: var(--text);
+  background: var(--surface);
   font-size: 0.8rem;
   text-overflow: ellipsis;
   white-space: nowrap;

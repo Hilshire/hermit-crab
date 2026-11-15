@@ -6,9 +6,9 @@
     flex-direction: column;
     justify-content: center;
     a {
-        color: $勿忘草;
+        color: var(--about-link);
         &:hover {
-            color: $千草;
+            color: var(--link);
         }
     }
 }

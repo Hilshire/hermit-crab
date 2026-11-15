@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { loadUtterances } from './loadUtterances';
+import { useThemeMode } from '../../hooks/useThemeMode';
 import { getCommentPreview } from './comment-preview';
 import type { CommentPreview } from './comment-preview';
 
 interface Props { term: string; issueNumber?: number | null }
 
 export const UtterancesComments: React.FC<Props> = ({ term, issueNumber }) => {
+  const { mode } = useThemeMode();
+  const utterancesTheme = mode === 'light' ? 'github-light' : 'photon-dark';
+  const themeRef = useRef(utterancesTheme);
+  themeRef.current = utterancesTheme;
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const root = useRef<HTMLDivElement>(null);
@@ -53,8 +58,15 @@ export const UtterancesComments: React.FC<Props> = ({ term, issueNumber }) => {
     if (!open || !node) return undefined;
     setWidgetStatus('loading');
     return loadUtterances(node, term, issue, () => setWidgetStatus('error'),
-      () => setWidgetStatus('ready'));
+      () => setWidgetStatus('ready'), themeRef.current);
   }, [open, term, issue]);
+
+  useEffect(() => {
+    const frame = container.current?.querySelector('iframe');
+    if (widgetStatus === 'ready' && frame?.contentWindow) {
+      frame.contentWindow.postMessage({ type: 'set-theme', theme: utterancesTheme }, 'https://utteranc.es');
+    }
+  }, [utterancesTheme, widgetStatus]);
 
   let buttonLabel = preview ? '展开评论' : '发表评论';
   if (status === 'loading') buttonLabel = '正在加载评论…';

@@ -1,9 +1,9 @@
 #__next {
-    color: $白练;
+    color: var(--text);
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: $墨;
+    background-color: var(--page-bg);
 }
 
 .header {
@@ -27,7 +27,7 @@
             cursor: pointer;
         }
         li:hover {
-            color: $白鼠;
+            color: var(--text-muted);
         }
     }
 }
@@ -36,7 +36,26 @@
     text-align: center;
     height: 4rem;
     line-height: 4rem;
-    background-color: $墨;
-    color: $白鼠;
+    background-color: var(--page-bg);
+    color: var(--text-muted);
     font-size: 12px;
+}
+.theme-toggle {
+    border: 0;
+    padding: 0.5rem;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    cursor: pointer;
+
+    &:hover { color: var(--text); }
+    &:focus-visible { outline: 1px solid var(--text-muted); outline-offset: 2px; }
+}
+
+.manage-theme-toggle {
+    position: absolute;
+    z-index: 2;
+    top: 1rem;
+    right: 1rem;
+    font-size: 14px;
 }

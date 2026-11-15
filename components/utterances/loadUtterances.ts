@@ -5,6 +5,7 @@ export function loadUtterances(
   issue: number | null,
   onError: () => void = () => {},
   onReady: () => void = () => {},
+  theme: 'photon-dark' | 'github-light' = 'photon-dark',
 ) {
   const staging = document.createElement('div');
   staging.hidden = true;
@@ -15,7 +16,7 @@ export function loadUtterances(
   script.setAttribute('repo', 'Hilshire/hermit-crab');
   if (issue) script.setAttribute('issue-number', String(issue));
   else script.setAttribute('issue-term', term);
-  script.setAttribute('theme', 'photon-dark');
+  script.setAttribute('theme', theme);
 
   let cancelled = false;
   let widget: Element | null = null;

@@ -7,10 +7,10 @@
     a {
         border-bottom: none;
         text-decoration: none;
-        color: $千草;
+        color: var(--link);
     }
     a:visited {
-        color: $千草;
+        color: var(--link);
     }
     textarea, button {
         border-radius: 1px;
@@ -34,11 +34,11 @@
         border-color: $蓝墨茶;
     }
     .gt-ico, .is--poping .gt-ico svg {
-        fill: $白练;
+        fill: var(--text);
     }
     .gt-popup {
-        background-color: $吕;
-        color: $白鼠;
+        background-color: var(--surface);
+        color: var(--text-muted);
         a {
             color: inherit;
         }
@@ -47,12 +47,12 @@
         }
     }
     .gt-comment-content {
-        background-color: $吕;
+        background-color: var(--surface);
         &:hover {
             box-shadow: none;
         }
         .gt-comment-body.markdown-body {
-            color: $白练 !important;
+            color: var(--text) !important;
             pre {
                 border-radius: 1px;
             }
@@ -89,8 +89,8 @@
     .comment-spinner {
         width: 1rem;
         height: 1rem;
-        border: 2px solid rgba(189, 192, 186, 0.25);
-        border-top-color: $白鼠;
+        border: 2px solid var(--spinner-track);
+        border-top-color: var(--text-muted);
         border-radius: 50%;
         animation: comment-spin 0.8s linear infinite;
     }

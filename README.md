@@ -34,6 +34,18 @@ Vercel Preview/Production 不支持默认 SQLite：Vercel Function 的文件系�
 
 开发环境会自动同步实体结构。生产环境已禁用自动同步；使用默认 SQLite 时，应用启动会执行已登记的 migration。所有后续表结构变更必须先通过 TypeORM migration 审核；不要依赖应用启动时的自动同步。
 
+MySQL 不会在应用启动时自动执行迁移。部署前，在能访问目标数据库、且已安装开发依赖的环境中配置 `DATABASE_TYPE=mysql` 和对应的数据库环境变量，然后运行：
+
+```sh
+yarn migration:run
+```
+
+命令也会读取项目的 `.env.local` 等 Next.js 环境文件，以生产配置连接数据库。它会运行尚未执行的 TypeORM 迁移并记录历史；新版本依赖新增列，应先执行迁移再部署。SQLite 也可以通过同一命令手动执行迁移；SQLite 生产环境仍会在应用启动时执行尚未执行的迁移。
+
+如果先前已经手动执行过旧版 MySQL SQL 脚本，当前迁移会检查已有列并补充迁移记录。若要在手动改过数据库后使用 TypeORM 的 `--fake` 选项，应先核对每项结构和数据变更；`--fake` 不会执行迁移内容。
+
+历史 Utterances 评论原本按页面标题匹配。如果历史评论没有自动关联，或者相同标题对应多个 GitHub Issue，可在后台编辑文章时填写原评论 Issue 编号。原有数据若没有保存文章和 Issue 的对应关系，不能仅凭标题可靠地区分。
+
 
 ## 计划
 

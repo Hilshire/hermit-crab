@@ -1,16 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getRepo } from '@utils';
-import { revalidateBlogPage } from '@server/blog-cache';
 import createBlog from '../../pages/api/blog';
 import updateOrDeleteBlog from '../../pages/api/blog/[id]';
 
 jest.mock('@middleware', () => ({ jwt: (handler: unknown) => handler }));
 jest.mock('@utils', () => ({ getRepo: jest.fn() }));
-jest.mock('@server/blog-cache', () => ({ revalidateBlogPage: jest.fn(async () => true) }));
 jest.mock('@server/entity', () => ({ Blog: function Blog() {}, Tag: function Tag() {} }));
 
 const mockedGetRepo = getRepo as jest.MockedFunction<typeof getRepo>;
-const mockedRevalidate = revalidateBlogPage as jest.MockedFunction<typeof revalidateBlogPage>;
 
 function response() {
   const res = { status: jest.fn(), json: jest.fn(), setHeader: jest.fn() };
@@ -62,7 +59,7 @@ describe('blog API', () => {
     expect(res.status).toHaveBeenCalledWith(400);
   });
 
-  it('updates a blog and revalidates its page', async () => {
+  it('updates a blog', async () => {
     const blog = { id: 2, tags: [] };
     const blogRepo = { findOneBy: jest.fn(async () => blog), save: jest.fn() };
     const tagRepo = { findByIds: jest.fn(async () => [{ id: 1 }]) };
@@ -74,7 +71,6 @@ describe('blog API', () => {
     expect(blogRepo.save).toHaveBeenCalledWith(expect.objectContaining({
       id: 2, tags: [{ id: 1 }],
     }));
-    expect(mockedRevalidate).toHaveBeenCalledWith(res, 2);
-    expect(res.json).toHaveBeenCalledWith({ code: 1, revalidated: true });
+    expect(res.json).toHaveBeenCalledWith({ code: 1 });
   });
 });

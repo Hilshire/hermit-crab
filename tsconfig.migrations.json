@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./server",
+    "outDir": "./.migration-build",
+    "noEmit": false,
+    "incremental": false,
+    "module": "commonjs",
+    "target": "es2020",
+    "types": ["node"]
+  },
+  "include": ["server/migration-data-source.ts"]
+}

@@ -21,7 +21,9 @@ export function TagSelector({
       id={id}
       label="标签"
       value={value}
+      InputLabelProps={{ shrink: true }}
       SelectProps={{
+        displayEmpty: true,
         multiple: true,
         onChange: (event) => {
           const { value: selected } = event.target;

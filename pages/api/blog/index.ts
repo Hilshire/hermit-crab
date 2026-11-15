@@ -1,6 +1,8 @@
+import { IsNull } from 'typeorm';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getRepo } from '@utils';
 import { jwt } from '@middleware';
+import { randomUUID } from 'crypto';
 import { parseBlogInput } from '@server/validation';
 import { Blog, Tag } from '../../../server/entity';
 
@@ -20,11 +22,17 @@ const createBlog = async (req: NextApiRequest, res: NextApiResponse) => {
         if (tags.length !== input.tagIds.length) {
           return res.status(400).json({ code: 0, message: 'invalid tags' });
         }
+        if (input.parentId) {
+          const parent = await repo.findOneBy({ id: input.parentId, deletedAt: IsNull() });
+          if (!parent || parent.parentId) return res.status(400).json({ code: 0, message: 'invalid parent' });
+        }
         const blog = repo.create({
           title: input.title,
           context: input.context,
           blogType: input.blogType,
           tags,
+          parentId: input.parentId || null,
+          commentTerm: `hermit-crab-blog-${randomUUID()}`,
         });
         await repo.save(blog);
         res.status(200).json({ code: 1 });

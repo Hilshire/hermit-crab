@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from 'react';
+import { IsNull } from 'typeorm';
 import type { GetServerSideProps } from 'next';
 import Markdown from 'react-markdown';
 import {
@@ -17,9 +18,15 @@ import { TagSelector } from '../../../components/TagSelector';
 interface Props {
   blog: BlogDetail;
   tags: TagDto[];
+  parents: { id: number; title: string }[];
+  hasChildren: boolean;
 }
 type DetailType = 'edit' | 'preview';
-const Blog: FunctionComponent<Props> = ({ blog: data, tags }) => {
+const Blog: FunctionComponent<Props> = ({
+  blog: data, tags, parents, hasChildren,
+}) => {
+  const [commentIssueNumber, setCommentIssueNumber] = useState(data.commentIssueNumber?.toString() || '');
+  const [parentId, setParentId] = useState<number | ''>(data.parentId || '');
   const [type, setType] = useState<DetailType>('preview');
   const [blogType, setBlogType] = useState<BlogType>(data.blogType);
   const [title, setTitle] = useState(data.title);
@@ -53,6 +60,33 @@ const Blog: FunctionComponent<Props> = ({ blog: data, tags }) => {
                     ))
                 }
               </TextField>
+            )}
+            {type === 'edit' && !hasChildren && (
+            <TextField
+              select
+              fullWidth
+              label="所属主帖"
+              value={parentId}
+              InputLabelProps={{ shrink: true }}
+              SelectProps={{ displayEmpty: true }}
+              onChange={(e) => setParentId(e.target.value === '' ? '' : Number(e.target.value))}
+            >
+              <MenuItem value="">独立文章</MenuItem>
+              {parents.map((parent) => (
+                <MenuItem key={parent.id} value={parent.id}>{parent.title}</MenuItem>
+              ))}
+            </TextField>
+            )}
+            {type === 'edit' && (
+              <TextField
+                fullWidth
+                label="评论 Issue 编号（可选）"
+                type="number"
+                value={commentIssueNumber}
+                onChange={(event) => setCommentIssueNumber(event.target.value)}
+                helperText="仅在历史评论匹配不正确时填写 GitHub Issue 编号"
+                inputProps={{ min: 1, step: 1 }}
+              />
             )}
             {type === 'preview' ? (
               <div className="tag-summary">
@@ -90,7 +124,8 @@ ${type === 'preview' ? data.context : context}
 
   function handleSubmit() {
     axios.put(`/api/blog/${data.id}`, {
-      title, context, blogType, tagIds,
+      title, context, blogType, tagIds, parentId: parentId || null,
+      commentIssueNumber: commentIssueNumber ? Number(commentIssueNumber) : null,
     })
       .then((res) => {
         if (res.data.code) {
@@ -117,7 +152,7 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
   const blogId = Number(params?.id);
   const repo = await getRepo<BlogEntity>(BlogEntity);
   const blog = Number.isInteger(blogId)
-    ? await repo.findOne({ where: { id: blogId }, relations: { tags: true } })
+    ? await repo.findOne({ where: { id: blogId, deletedAt: IsNull() }, relations: { tags: true } })
     : null;
 
   if (!blog) {
@@ -126,6 +161,8 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
 
   const tagRepo = await getRepo<TagEntity>(TagEntity);
   const tags = await tagRepo.find();
+  const parents = await repo.find({ where: { parentId: IsNull(), deletedAt: IsNull() }, select: ['id', 'title'] });
+  const hasChildren = (await repo.countBy({ parentId: blog.id })) > 0;
 
   return {
     props: {
@@ -134,10 +171,16 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
         title: blog.title,
         context: blog.context,
         blogType: blog.blogType,
+        parentId: blog.parentId,
+        commentIssueNumber: blog.commentIssueNumber,
         createAt: serializeDate(blog.createAt),
         lastUpdateAt: serializeDate(blog.lastUpdateAt),
         tags: blog.tags.map(({ id, name, color }) => ({ id, name, color })),
       },
+      parents: parents
+        .filter((parent) => parent.id !== blog.id)
+        .map(({ id, title }) => ({ id, title })),
+      hasChildren,
       tags: tags.map(({ id, name, color }) => ({ id, name, color })),
     },
   };

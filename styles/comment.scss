@@ -64,3 +64,42 @@
 .utterances-comments-hook {
     width: 100%;
 }
+
+.series-comments {
+    position: relative;
+
+    .utterances-comments-hook.is-loading .utterances {
+        min-height: 300px;
+    }
+
+    .utterances-comments-hook.is-loading {
+        position: absolute;
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .comment-loading {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        min-height: 5rem;
+    }
+
+    .comment-spinner {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(189, 192, 186, 0.25);
+        border-top-color: $白鼠;
+        border-radius: 50%;
+        animation: comment-spin 0.8s linear infinite;
+    }
+}
+
+@keyframes comment-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .series-comments .comment-spinner { animation: none; }
+}

@@ -128,3 +128,70 @@
     margin-bottom: 3rem;
   }
 }
+
+.blog-latest { font-size: 14px; line-height: 1.6; font-weight: 400; color: $白鼠; }
+.series-content { width: 70%; }
+.series-comments { color: $白鼠; font-size: 14px; margin: 2rem 0; }
+.series-comments button, .series-controls button { color: $白鼠; background: none; border: 0; padding: 0; cursor: pointer; }
+.comment-preview { white-space: pre-wrap; overflow-wrap: anywhere; }
+.series-controls { border-top: 1px solid $白鼠; display: flex; justify-content: space-between; padding: 1rem 0; }
+.series-controls select { color: $白鼠; background: $墨; border: 0; }
+.series-directory { display: grid; gap: 0.75rem; padding: 1rem 0; border-bottom: 1px solid $白鼠; color: $白鼠; }
+.series-entry { border-top: 1px solid rgba(255, 255, 255, 0.22); padding-top: 2rem; }
+.series-entry h2 { font-family: $font-family-serif; font-size: 32px; margin: 0 0 0.5rem; }
+.series-date { color: $白鼠; font-size: 14px; }
+.series-entry .main-content { max-width: 100%; margin-top: 1.5rem; }
+@media (max-width: 800px) { .series-content { width: 90%; } }
+
+.series-rail {
+  position: fixed;
+  z-index: 5;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-height: 70vh;
+  overflow-y: auto;
+
+  a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 2.75rem;
+    min-height: 1.75rem;
+  }
+
+  .series-rail-line {
+    width: 0.75rem;
+    height: 2px;
+    background: $白鼠;
+    transition: width 150ms ease, background-color 150ms ease;
+  }
+
+  a.is-active .series-rail-line,
+  a:hover .series-rail-line,
+  a:focus-visible .series-rail-line {
+    width: 1.25rem;
+    background: $白练;
+  }
+
+}
+
+.series-rail-tooltip {
+  position: fixed;
+  z-index: 6;
+  right: 3.5rem;
+  transform: translateY(-50%);
+  max-width: min(24rem, 70vw);
+  padding: 0.3rem 0.55rem;
+  overflow: hidden;
+  color: $白练;
+  background: $吕;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
